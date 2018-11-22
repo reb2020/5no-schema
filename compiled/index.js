@@ -43,7 +43,9 @@ var Schema = function Schema(schema) {
         for (var _iterator = filtersByField[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var filter = _step.value;
 
-          dataFilter[field] = filter.fn((0, _extends3.default)({}, filter.data, { value: dataFilter[field] }));
+          if (typeof dataFilter[field] !== 'undefined') {
+            dataFilter[field] = filter.fn((0, _extends3.default)({}, filter.data, { value: dataFilter[field] }));
+          }
         }
       } catch (err) {
         _didIteratorError = true;

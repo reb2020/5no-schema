@@ -12,7 +12,6 @@ const schemaJson = {
     },
     email: {
       type: String,
-      defaultValue: null,
       required: true
     },
     active: {
@@ -20,8 +19,7 @@ const schemaJson = {
       defaultValue: false
     },
     createdAt: {
-      type: Date,
-      defaultValue: null
+      type: Date
     },
     informations: {
       type: Object,

@@ -64,7 +64,9 @@ class Schema {
       })
 
       for (let filter of filtersByField) {
-        dataFilter[field] = filter.fn({...filter.data, value: dataFilter[field]})
+        if (typeof dataFilter[field] !== 'undefined') {
+          dataFilter[field] = filter.fn({...filter.data, value: dataFilter[field]})
+        }
       }
     })
 
