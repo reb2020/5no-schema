@@ -35,6 +35,21 @@ const schemaJsonData = {
     id: 123,
     email: 'test@test.test',
     active: true,
+    test: 'Param Is Not Described In Schema',
+    createdAt: new Date('2018-12-12 12:12:12'),
+    informations: {
+        firstName: 'Test'
+    },
+    roles: [
+        'customer',
+        'admin'
+    ]
+}
+
+const schemaJsonDataReturn = {
+    id: 123,
+    email: 'test@test.test',
+    active: true,
     createdAt: new Date('2018-12-12 12:12:12'),
     informations: {
         firstName: 'Test'
@@ -57,7 +72,7 @@ describe('Schema', () => {
         const SchemaData = new Schema(schemaJson)
         const SchemaDataValidate = await SchemaData.validate(schemaJsonData)
         
-        expect(SchemaDataValidate).to.eql(schemaJsonData)
+        expect(SchemaDataValidate).to.eql(schemaJsonDataReturn)
     })
     
     it('validator has to return error of type Number', async () => {
@@ -234,7 +249,7 @@ describe('Schema', () => {
             createdAt: '2018-12-12 12:12:12'
         }))
         
-        expect(SchemaDataFiltered).to.eql(schemaJsonData)
+        expect(SchemaDataFiltered).to.eql(schemaJsonDataReturn)
     })
     
     it('custom filter', async () => {
@@ -260,7 +275,7 @@ describe('Schema', () => {
         }))
         const SchemaDataFiltered = SchemaData.filter(schemaJsonData)
         
-        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonData, {
+        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonDataReturn, {
             id: 1223
         }))
     })
@@ -280,7 +295,7 @@ describe('Schema', () => {
             email: '  test@test   ',
         }))
         
-        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonData, {
+        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonDataReturn, {
             email: 'test@test'
         }))
     })
@@ -300,7 +315,7 @@ describe('Schema', () => {
             email: 'Test@Test',
         }))
         
-        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonData, {
+        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonDataReturn, {
             email: 'test@test'
         }))
     })
@@ -320,7 +335,7 @@ describe('Schema', () => {
             email: 'Test@Test',
         }))
         
-        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonData, {
+        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonDataReturn, {
             email: 'TEST@TEST'
         }))
     })

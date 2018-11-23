@@ -1,6 +1,6 @@
 import Filters from './filters'
 import Validators from './validators'
-import { clone, getTypeName, initializeFunctions } from './helper'
+import { clone, getTypeName, initializeFunctions, filterDataByFields } from './helper'
 
 class Schema {
   constructor(schema) {
@@ -54,7 +54,7 @@ class Schema {
   }
 
   filter = (data) => {
-    let dataFilter = clone(data)
+    let dataFilter = filterDataByFields(clone(data), this.fields)
 
     Object.keys(dataFilter).forEach((field) => {
       const filtersByField = initializeFunctions(this.filters[field], Filters, {
@@ -74,7 +74,7 @@ class Schema {
   }
 
   validate = (data) => {
-    let dataValidate = clone(data)
+    let dataValidate = filterDataByFields(clone(data), this.fields)
     let errors = []
 
     Object.keys(this.fields).forEach((field) => {

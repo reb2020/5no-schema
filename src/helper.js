@@ -54,9 +54,22 @@ const initializeFunctions = (functionsData, functionsList, functionArguments) =>
   return initializeFunctionsData
 }
 
+const filterDataByFields = (data, fields) => {
+  let returnData = {}
+  const allowFields = Object.keys(fields)
+  for (let field of Object.keys(data)) {
+    if (allowFields.includes(field)) {
+      returnData[field] = data[field]
+    }
+  }
+
+  return returnData
+}
+
 module.exports = {
   clone,
   getTypeOfValue,
   getTypeName,
+  filterDataByFields,
   initializeFunctions,
 }

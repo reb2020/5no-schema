@@ -84,9 +84,43 @@ var initializeFunctions = function initializeFunctions(functionsData, functionsL
   return initializeFunctionsData;
 };
 
+var filterDataByFields = function filterDataByFields(data, fields) {
+  var returnData = {};
+  var allowFields = Object.keys(fields);
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
+
+  try {
+    for (var _iterator2 = Object.keys(data)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var field = _step2.value;
+
+      if (allowFields.includes(field)) {
+        returnData[field] = data[field];
+      }
+    }
+  } catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+        _iterator2.return();
+      }
+    } finally {
+      if (_didIteratorError2) {
+        throw _iteratorError2;
+      }
+    }
+  }
+
+  return returnData;
+};
+
 module.exports = {
   clone: clone,
   getTypeOfValue: getTypeOfValue,
   getTypeName: getTypeName,
+  filterDataByFields: filterDataByFields,
   initializeFunctions: initializeFunctions
 };

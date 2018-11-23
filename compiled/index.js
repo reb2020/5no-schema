@@ -26,7 +26,7 @@ var Schema = function Schema(schema) {
   (0, _classCallCheck3.default)(this, Schema);
 
   this.filter = function (data) {
-    var dataFilter = (0, _helper.clone)(data);
+    var dataFilter = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields);
 
     Object.keys(dataFilter).forEach(function (field) {
       var filtersByField = (0, _helper.initializeFunctions)(_this.filters[field], _filters2.default, {
@@ -67,7 +67,7 @@ var Schema = function Schema(schema) {
   };
 
   this.validate = function (data) {
-    var dataValidate = (0, _helper.clone)(data);
+    var dataValidate = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields);
     var errors = [];
 
     Object.keys(_this.fields).forEach(function (field) {
