@@ -1,6 +1,6 @@
 {
   "name": "5no-schema",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "JSON Schema Filter/Validator",
   "main": "compiled/index.js",
   "scripts": {
@@ -33,6 +33,7 @@
     "url": "git+https://github.com/reb2020/5no-schema.git"
   },
   "dependencies": {
+    "moment": "^2.22.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

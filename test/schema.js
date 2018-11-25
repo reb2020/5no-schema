@@ -21,6 +21,10 @@ const schemaJson = {
     createdAt: {
       type: Date
     },
+    updatedAt: {
+      type: Date,
+      format: 'YYYY-MM-DD'
+    },
     informations: {
       type: Object,
       defaultValue: null
@@ -37,6 +41,7 @@ const schemaJsonData = {
     active: true,
     test: 'Param Is Not Described In Schema',
     createdAt: new Date('2018-12-12 12:12:12'),
+    updatedAt: '2018-12-12 10:10:10',
     informations: {
         firstName: 'Test'
     },
@@ -51,6 +56,7 @@ const schemaJsonDataReturn = {
     email: 'test@test.test',
     active: true,
     createdAt: new Date('2018-12-12 12:12:12'),
+    updatedAt: '2018-12-12',
     informations: {
         firstName: 'Test'
     },
@@ -72,7 +78,7 @@ describe('Schema', () => {
         const SchemaData = new Schema(schemaJson)
         const SchemaDataValidate = await SchemaData.validate(schemaJsonData)
         
-        expect(SchemaDataValidate).to.eql(schemaJsonDataReturn)
+        expect(SchemaDataValidate).to.eql(Object.assign({}, schemaJsonDataReturn, {updatedAt: '2018-12-12 10:10:10'}))
     })
     
     it('validator has to return error of type Number', async () => {
@@ -120,7 +126,7 @@ describe('Schema', () => {
             SchemaDataValidate = e[0].message
         }
         
-        expect(SchemaDataValidate).to.eql('createdAt has incorrect type')
+        expect(SchemaDataValidate).to.eql('createdAt has incorrect date format')
     })
     
     it('validator has to return error of type Object', async () => {
@@ -155,7 +161,7 @@ describe('Schema', () => {
                 id: 'tt',
                 email: 112,
                 active: 0,
-                createdAt: '11122',
+                createdAt: true,
                 informations: 'test',
                 roles: '222'
             }))

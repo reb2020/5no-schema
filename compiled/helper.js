@@ -8,7 +8,23 @@ var _typeof2 = require('babel-runtime/helpers/typeof');
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var isDateValid = function isDateValid(date) {
+  var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'YYYY-MM-DD HH:mm:ss';
+
+  return (0, _moment2.default)(date, format).isValid();
+};
+
+var formatDate = function formatDate(date) {
+  var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'YYYY-MM-DD HH:mm:ss';
+
+  return (0, _moment2.default)(date).format(format);
+};
 
 var clone = function clone(data) {
   return Object.assign({}, data);
@@ -122,5 +138,7 @@ module.exports = {
   getTypeOfValue: getTypeOfValue,
   getTypeName: getTypeName,
   filterDataByFields: filterDataByFields,
-  initializeFunctions: initializeFunctions
+  initializeFunctions: initializeFunctions,
+  isDateValid: isDateValid,
+  formatDate: formatDate
 };

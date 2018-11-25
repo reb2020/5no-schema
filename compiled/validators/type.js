@@ -13,6 +13,10 @@ exports.default = function (_ref) {
   var typeName = (0, _helper.getTypeName)(type);
   var typeOfValue = (0, _helper.getTypeOfValue)(value);
 
+  if (typeName === 'date' && typeOfValue === 'string') {
+    return true;
+  }
+
   if (typeof value !== 'undefined' && value !== defaultValue && typeOfValue !== typeName) {
     return name + ' has incorrect type';
   }

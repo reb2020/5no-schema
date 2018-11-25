@@ -133,7 +133,8 @@ var Schema = function Schema(schema) {
         defaultValue = _schema$field.defaultValue,
         required = _schema$field.required,
         validators = _schema$field.validators,
-        filters = _schema$field.filters;
+        filters = _schema$field.filters,
+        format = _schema$field.format;
 
     var typeName = (0, _helper.getTypeName)(type);
 
@@ -148,6 +149,17 @@ var Schema = function Schema(schema) {
 
     if (required) {
       _this.validators[field].push('required');
+    }
+
+    var dateFN = {
+      fn: 'date',
+      options: {
+        format: format
+      }
+    };
+
+    if (typeName === 'date') {
+      _this.validators[field].push(dateFN);
     }
 
     if (validators) {
@@ -177,7 +189,11 @@ var Schema = function Schema(schema) {
       }
     }
 
-    _this.filters[field] = [typeName];
+    if (typeName === 'date') {
+      _this.filters[field] = [dateFN];
+    } else {
+      _this.filters[field] = [typeName];
+    }
 
     if (filters) {
       var _iteratorNormalCompletion4 = true;

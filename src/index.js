@@ -19,7 +19,7 @@ class Schema {
     this.types = {}
 
     Object.keys(schema).forEach((field) => {
-      const { type, defaultValue, required, validators, filters } = schema[field]
+      const { type, defaultValue, required, validators, filters, format } = schema[field]
       const typeName = getTypeName(type)
 
       if (!allowTypes.includes(typeName)) {
@@ -35,13 +35,28 @@ class Schema {
         this.validators[field].push('required')
       }
 
+      let dateFN = {
+        fn: 'date',
+        options: {
+          format: format,
+        },
+      }
+
+      if (typeName === 'date') {
+        this.validators[field].push(dateFN)
+      }
+
       if (validators) {
         for (let validator of validators) {
           this.validators[field].push(validator)
         }
       }
 
-      this.filters[field] = [typeName]
+      if (typeName === 'date') {
+        this.filters[field] = [dateFN]
+      } else {
+        this.filters[field] = [typeName]
+      }
 
       if (filters) {
         for (let filter of filters) {

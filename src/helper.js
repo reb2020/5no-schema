@@ -1,3 +1,13 @@
+import moment from 'moment'
+
+const isDateValid = (date, format = 'YYYY-MM-DD HH:mm:ss') => {
+  return moment(date, format).isValid()
+}
+
+const formatDate = (date, format = 'YYYY-MM-DD HH:mm:ss') => {
+  return moment(date).format(format)
+}
+
 const clone = (data) => {
   return Object.assign({}, data)
 }
@@ -72,4 +82,6 @@ module.exports = {
   getTypeName,
   filterDataByFields,
   initializeFunctions,
+  isDateValid,
+  formatDate,
 }

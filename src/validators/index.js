@@ -1,7 +1,9 @@
-import Required from './required'
-import Type from './type'
+import ValidatorRequired from './required'
+import ValidatorType from './type'
+import ValidatorDate from './date'
 
 export default {
-  type: Type,
-  required: Required,
+  type: ValidatorType,
+  required: ValidatorRequired,
+  date: ValidatorDate,
 }

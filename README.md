@@ -17,6 +17,7 @@ const schemaJson = {
     [name]: {
       type: Number, // Number, String, Boolean, Date, Array, Object
       defaultValue: null, // This value is optionally
+      format: 'YYYY-MM-DD HH:mm:ss', // This value only for Date type
       required: true, // true or false
       filters: [], // Can be 'trim', 'upperCase', 'lowerCase' or custom functions
       validators: [], // Can be custom functions
@@ -74,6 +75,11 @@ const schemaJson = {
       type: Date,
       defaultValue: null
     },
+    updatedAt: {
+      type: Date,
+      defaultValue: null,
+      format: 'YYYY-MM-DD'
+    },
     informations: {
       type: Object,
       defaultValue: null
@@ -89,6 +95,7 @@ const schemaJsonData = {
     email: 'test@test.test',
     active: true,
     createdAt: '2018-12-12 12:12:12',
+    updatedAt: '2018-12-12 12:12:12',
     informations: {
       firstName: 'Test'
     },
@@ -108,6 +115,7 @@ const SchemaDataFiltered = SchemaData.filter(schemaJsonData)
   email: 'test@test.test',
   active: true,
   createdAt: 2018-12-12T10:12:12.000Z,
+  updatedAt: '2018-12-12',
   informations: { firstName: 'Test' },
   roles: [ 'customer', 'admin' ] 
 }
