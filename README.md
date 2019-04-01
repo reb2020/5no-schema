@@ -130,6 +130,50 @@ SchemaData.validate(SchemaDataFiltered).then(function(data) {
         console.log(error.message)
     }
 })
+
+
+const SchemaDataJsonOptions = SchemaData.json()
+
+/*
+{
+    id: {
+      type: "number",
+      defaultValue: null,
+      required: true
+    },
+    email: {
+      type: "string",
+      defaultValue: null,
+      required: true
+    },
+    active: {
+      type: "boolean",
+      defaultValue: false,
+      required: false
+    },
+    createdAt: {
+      type: "date",
+      defaultValue: null,
+      required: false
+    },
+    updatedAt: {
+      type: "date",
+      defaultValue: null,
+      format: "YYYY-MM-DD",
+      required: false
+    },
+    informations: {
+      type: "object",
+      defaultValue: null,
+      required: false
+    },
+    roles: {
+      type: "array",
+      defaultValue: null,
+      required: false
+    }
+}
+*/
    
 ```
 

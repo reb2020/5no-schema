@@ -17,6 +17,8 @@ class Schema {
     this.validators = {}
     this.filters = {}
     this.types = {}
+    this.required = {}
+    this.formats = {}
 
     Object.keys(schema).forEach((field) => {
       const { type, defaultValue, required, validators, filters, format } = schema[field]
@@ -30,8 +32,11 @@ class Schema {
       this.types[field] = type
 
       this.validators[field] = ['type']
+      this.required[field] = false
+      this.formats[field] = format
 
       if (required) {
+        this.required[field] = true
         this.validators[field].push('required')
       }
 
@@ -119,6 +124,27 @@ class Schema {
         resolve(dataValidate)
       }
     })
+  }
+
+  json = () => {
+    let data = {}
+
+    Object.keys(this.fields).forEach((field) => {
+      data[field] = {
+        type: getTypeName(this.types[field]),
+        required: this.required[field],
+      }
+
+      if (typeof this.fields[field] !== 'undefined') {
+        data[field]['defaultValue'] = this.fields[field]
+      }
+
+      if (typeof this.formats[field] !== 'undefined') {
+        data[field]['format'] = this.formats[field]
+      }
+    })
+
+    return data
   }
 }
 

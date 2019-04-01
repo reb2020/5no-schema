@@ -120,12 +120,35 @@ var Schema = function Schema(schema) {
     });
   };
 
+  this.json = function () {
+    var data = {};
+
+    Object.keys(_this.fields).forEach(function (field) {
+      data[field] = {
+        type: (0, _helper.getTypeName)(_this.types[field]),
+        required: _this.required[field]
+      };
+
+      if (typeof _this.fields[field] !== 'undefined') {
+        data[field]['defaultValue'] = _this.fields[field];
+      }
+
+      if (typeof _this.formats[field] !== 'undefined') {
+        data[field]['format'] = _this.formats[field];
+      }
+    });
+
+    return data;
+  };
+
   var allowTypes = ['string', 'number', 'boolean', 'object', 'array', 'date'];
 
   this.fields = {};
   this.validators = {};
   this.filters = {};
   this.types = {};
+  this.required = {};
+  this.formats = {};
 
   Object.keys(schema).forEach(function (field) {
     var _schema$field = schema[field],
@@ -146,8 +169,11 @@ var Schema = function Schema(schema) {
     _this.types[field] = type;
 
     _this.validators[field] = ['type'];
+    _this.required[field] = false;
+    _this.formats[field] = format;
 
     if (required) {
+      _this.required[field] = true;
       _this.validators[field].push('required');
     }
 
