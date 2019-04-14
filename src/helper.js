@@ -1,7 +1,7 @@
 import moment from 'moment'
 
 const isDateValid = (date, format = 'YYYY-MM-DD HH:mm:ss') => {
-  return moment(date, format).isValid()
+  return moment(date, format, true).isValid()
 }
 
 const formatDate = (date, format = 'YYYY-MM-DD HH:mm:ss') => {

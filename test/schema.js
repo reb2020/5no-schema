@@ -12,7 +12,10 @@ const schemaJson = {
     },
     email: {
       type: String,
-      required: true
+      required: true,
+      validators: [
+          'email'
+      ]
     },
     active: {
       type: Boolean,
@@ -78,7 +81,7 @@ const schemaJsonData = {
     active: true,
     test: 'Param Is Not Described In Schema',
     createdAt: new Date('2018-12-12 12:12:12'),
-    updatedAt: '2018-12-12 10:10:10',
+    updatedAt: '2018-12-12',
     informations: {
         firstName: 'Test'
     },
@@ -115,7 +118,7 @@ describe('Schema', () => {
         const SchemaData = new Schema(schemaJson)
         const SchemaDataValidate = await SchemaData.validate(schemaJsonData)
         
-        expect(SchemaDataValidate).to.eql(Object.assign({}, schemaJsonDataReturn, {updatedAt: '2018-12-12 10:10:10'}))
+        expect(SchemaDataValidate).to.eql(Object.assign({}, schemaJsonDataReturn, {updatedAt: '2018-12-12'}))
     })
     
     it('validator has to return error of type Number', async () => {
@@ -212,6 +215,7 @@ describe('Schema', () => {
         expect(SchemaDataValidate).to.eql([ 
             "id has incorrect type",
             "email has incorrect type",
+            "email has incorrect email format",
             "active has incorrect type",
             "createdAt has incorrect type",
             "informations has incorrect type",

@@ -16,10 +16,15 @@ var _date = require('./date');
 
 var _date2 = _interopRequireDefault(_date);
 
+var _email = require('./email');
+
+var _email2 = _interopRequireDefault(_email);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
   type: _type2.default,
   required: _required2.default,
-  date: _date2.default
+  date: _date2.default,
+  email: _email2.default
 };

@@ -17,7 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var isDateValid = function isDateValid(date) {
   var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'YYYY-MM-DD HH:mm:ss';
 
-  return (0, _moment2.default)(date, format).isValid();
+  return (0, _moment2.default)(date, format, true).isValid();
 };
 
 var formatDate = function formatDate(date) {
