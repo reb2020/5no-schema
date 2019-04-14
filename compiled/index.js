@@ -91,9 +91,9 @@ var Schema = function Schema(schema) {
           previousStatus = isValid;
           if (isValid !== true) {
             if (typeof isValid === 'string') {
-              errors.push(new Error(isValid));
+              errors.push({ field: field, error: new Error(isValid) });
             } else {
-              errors.push(isValid);
+              errors.push({ field: field, error: isValid });
             }
           }
         }
@@ -115,7 +115,7 @@ var Schema = function Schema(schema) {
 
     return new Promise(function (resolve, reject) {
       if (errors.length > 0) {
-        reject(errors);
+        reject((0, _helper.groupErrors)(errors));
       } else {
         resolve(dataValidate);
       }

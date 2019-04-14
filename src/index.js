@@ -1,6 +1,6 @@
 import Filters from './filters'
 import Validators from './validators'
-import { clone, getTypeName, initializeFunctions, filterDataByFields } from './helper'
+import { clone, groupErrors, getTypeName, initializeFunctions, filterDataByFields } from './helper'
 
 class Schema {
   constructor(schema) {
@@ -111,9 +111,9 @@ class Schema {
         previousStatus = isValid
         if (isValid !== true) {
           if (typeof isValid === 'string') {
-            errors.push(new Error(isValid))
+            errors.push({ field: field, error: new Error(isValid) })
           } else {
-            errors.push(isValid)
+            errors.push({ field: field, error: isValid })
           }
         }
       }
@@ -121,7 +121,7 @@ class Schema {
 
     return new Promise((resolve, reject) => {
       if (errors.length > 0) {
-        reject(errors)
+        reject(groupErrors(errors))
       } else {
         resolve(dataValidate)
       }

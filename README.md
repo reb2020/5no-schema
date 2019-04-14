@@ -24,12 +24,13 @@ const schemaJson = {
     }
 }
 
-const customFilertOrValidator = ({name, type, value, defaultValue, options}) {
+const customFilertOrValidator = ({name, type, value, defaultValue, options, previousStatus}) {
   //name field
   //type field
   //value field
   //defaultValue field
   //options custom data
+  //previousStatus 
 }
    
 ```
@@ -125,10 +126,13 @@ SchemaData.validate(SchemaDataFiltered).then(function(data) {
     //data = SchemaDataFiltered
     console.log(data)
 }).catch(function(errors) {
-    //errors = array of Error objects
-    for (let error of errors) {
-        console.log(error.message)
-    }
+    //errors = The object consist of fields which have errors
+
+    Object.keys(errors).forEach((name) => {
+        for (let error of errors[name]) {
+            console.log(error.message)
+        }
+    })
 })
 
 

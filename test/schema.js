@@ -129,7 +129,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {id: 'test'}))
         } catch (e) {
-            SchemaDataValidate = e[0].message
+            SchemaDataValidate = e.id[0].message
         }
         
         expect(SchemaDataValidate).to.eql('id has incorrect type')
@@ -141,7 +141,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {email: 150}))
         } catch (e) {
-            SchemaDataValidate = e[0].message
+            SchemaDataValidate = e.email[0].message
         }
         
         expect(SchemaDataValidate).to.eql('email has incorrect type')
@@ -153,7 +153,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {active: 1}))
         } catch (e) {
-            SchemaDataValidate = e[0].message
+            SchemaDataValidate = e.active[0].message
         }
         
         expect(SchemaDataValidate).to.eql('active has incorrect type')
@@ -165,7 +165,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {createdAt: 'test'}))
         } catch (e) {
-            SchemaDataValidate = e[0].message
+            SchemaDataValidate = e.createdAt[0].message
         }
         
         expect(SchemaDataValidate).to.eql('createdAt has incorrect date format')
@@ -177,7 +177,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {informations: 'test'}))
         } catch (e) {
-            SchemaDataValidate = e[0].message
+            SchemaDataValidate = e.informations[0].message
         }
         
         expect(SchemaDataValidate).to.eql('informations has incorrect type')
@@ -189,7 +189,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {roles: 'test'}))
         } catch (e) {
-            SchemaDataValidate = e[0].message
+            SchemaDataValidate = e.roles[0].message
         }
         
         expect(SchemaDataValidate).to.eql('roles has incorrect type')
@@ -201,7 +201,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {email: 'test@'}))
         } catch (e) {
-            SchemaDataValidate = e[0].message
+            SchemaDataValidate = e.email[0].message
         }
         
         expect(SchemaDataValidate).to.eql('email has incorrect email format')
@@ -221,9 +221,11 @@ describe('Schema', () => {
             }))
         } catch (e) {
             SchemaDataValidate = []
-            for (let error of e) {
-                SchemaDataValidate.push(error.message)
-            }
+            Object.keys(e).forEach((name) => {
+                for (let error of e[name]) {
+                    SchemaDataValidate.push(error.message)
+                }
+            })
         }
         
         expect(SchemaDataValidate).to.eql([ 
@@ -255,9 +257,11 @@ describe('Schema', () => {
             })
         } catch (e) {
             SchemaDataValidate = []
-            for (let error of e) {
-                SchemaDataValidate.push(error.message)
-            }
+            Object.keys(e).forEach((name) => {
+                for (let error of e[name]) {
+                    SchemaDataValidate.push(error.message)
+                }
+            })
         }
         
         expect(SchemaDataValidate).to.eql({
@@ -275,9 +279,11 @@ describe('Schema', () => {
             })
         } catch (e) {
             SchemaDataValidate = []
-            for (let error of e) {
-                SchemaDataValidate.push(error.message)
-            }
+            Object.keys(e).forEach((name) => {
+                for (let error of e[name]) {
+                    SchemaDataValidate.push(error.message)
+                }
+            })
         }
         
         expect(SchemaDataValidate).to.eql([ 
@@ -318,9 +324,11 @@ describe('Schema', () => {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData))
         } catch (e) {
             SchemaDataValidate = []
-            for (let error of e) {
-                SchemaDataValidate.push(error.message)
-            }
+            Object.keys(e).forEach((name) => {
+                for (let error of e[name]) {
+                    SchemaDataValidate.push(error.message)
+                }
+            })
         }
         
         expect(SchemaDataValidate).to.eql([ 

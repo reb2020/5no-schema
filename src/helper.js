@@ -12,6 +12,18 @@ const clone = (data) => {
   return Object.assign({}, data)
 }
 
+const groupErrors = (errors) => {
+  let group = {}
+  for (let error of errors) {
+    if (typeof group[error.field] === 'undefined') {
+      group[error.field] = []
+    }
+
+    group[error.field].push(error.error)
+  }
+  return group
+}
+
 const getTypeName = (type) => {
   let typeName = null
   if (typeof type === 'string') {
@@ -78,6 +90,7 @@ const filterDataByFields = (data, fields) => {
 
 module.exports = {
   clone,
+  groupErrors,
   getTypeOfValue,
   getTypeName,
   filterDataByFields,
