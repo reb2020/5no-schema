@@ -105,8 +105,10 @@ class Schema {
         defaultValue: this.fields[field],
       })
 
+      let previousStatus = true
       for (let validator of validatorsByField) {
-        const isValid = validator.fn(validator.data)
+        const isValid = validator.fn({...validator.data, previousStatus: previousStatus})
+        previousStatus = isValid
         if (isValid !== true) {
           if (typeof isValid === 'string') {
             errors.push(new Error(isValid))

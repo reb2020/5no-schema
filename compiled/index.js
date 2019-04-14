@@ -78,6 +78,7 @@ var Schema = function Schema(schema) {
         defaultValue: _this.fields[field]
       });
 
+      var previousStatus = true;
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
@@ -86,7 +87,8 @@ var Schema = function Schema(schema) {
         for (var _iterator2 = validatorsByField[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var validator = _step2.value;
 
-          var isValid = validator.fn(validator.data);
+          var isValid = validator.fn((0, _extends3.default)({}, validator.data, { previousStatus: previousStatus }));
+          previousStatus = isValid;
           if (isValid !== true) {
             if (typeof isValid === 'string') {
               errors.push(new Error(isValid));

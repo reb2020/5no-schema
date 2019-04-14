@@ -1,8 +1,12 @@
 import { formatDate } from '../helper'
 
-export default function({value, options}) {
+export default function({value, options, defaultValue}) {
   if (value === null) {
     return null
+  }
+
+  if (value === defaultValue) {
+    return defaultValue
   }
 
   if (typeof options.format !== 'undefined') {

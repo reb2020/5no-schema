@@ -26,7 +26,8 @@ const schemaJson = {
     },
     updatedAt: {
       type: Date,
-      format: 'YYYY-MM-DD'
+      defaultValue: '',
+      format: 'YYYY-MM-DD',
     },
     informations: {
       type: Object,
@@ -60,6 +61,7 @@ const schemaJsonOptions = {
     },
     updatedAt: {
       type: "date",
+      defaultValue: '',
       format: 'YYYY-MM-DD',
       required: false
     },
@@ -193,6 +195,18 @@ describe('Schema', () => {
         expect(SchemaDataValidate).to.eql('roles has incorrect type')
     })
     
+    it('validator has to return error of type String with additional validator by email', async () => {
+        const SchemaData = new Schema(schemaJson)
+        let SchemaDataValidate = null
+        try {
+            SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {email: 'test@'}))
+        } catch (e) {
+            SchemaDataValidate = e[0].message
+        }
+        
+        expect(SchemaDataValidate).to.eql('email has incorrect email format')
+    })
+    
     it('validator has to return errors', async () => {
         const SchemaData = new Schema(schemaJson)
         let SchemaDataValidate = null
@@ -215,12 +229,41 @@ describe('Schema', () => {
         expect(SchemaDataValidate).to.eql([ 
             "id has incorrect type",
             "email has incorrect type",
-            "email has incorrect email format",
             "active has incorrect type",
             "createdAt has incorrect type",
             "informations has incorrect type",
             "roles has incorrect type"
         ])
+    })
+
+    it('validator does not need to return errors of not required fields', async () => {
+        const SchemaData = new Schema(Object.assign({}, schemaJson, {
+            email: {
+                type: String,
+                required: false,
+                defaultValue: '',
+                validators: [
+                    'email'
+                ]
+            }
+        }))
+        let SchemaDataValidate = null
+        try {
+            SchemaDataValidate = await SchemaData.validate({
+                id: 123,
+                email: ''
+            })
+        } catch (e) {
+            SchemaDataValidate = []
+            for (let error of e) {
+                SchemaDataValidate.push(error.message)
+            }
+        }
+        
+        expect(SchemaDataValidate).to.eql({
+            id: 123,
+            email: ''
+        })
     })
     
     it('validator has to return errors of required fields', async () => {
