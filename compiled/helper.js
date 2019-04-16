@@ -40,11 +40,17 @@ var groupErrors = function groupErrors(errors) {
     for (var _iterator = errors[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var error = _step.value;
 
-      if (typeof group[error.field] === 'undefined') {
-        group[error.field] = [];
-      }
+      if (error.result !== true) {
+        if (typeof group[error.field] === 'undefined') {
+          group[error.field] = [];
+        }
 
-      group[error.field].push(error.error);
+        if (typeof error.result !== 'string') {
+          group[error.field].push(error.result.message);
+        } else {
+          group[error.field].push(error.result);
+        }
+      }
     }
   } catch (err) {
     _didIteratorError = true;
@@ -85,6 +91,30 @@ var getTypeOfValue = function getTypeOfValue(value) {
   return typeOfValue;
 };
 
+var initializePromise = function initializePromise(field, validator) {
+  return new Promise(function (resolve, reject) {
+    if (validator.isPromise) {
+      validator.fn(validator.data).then(function (result) {
+        resolve({
+          field: field,
+          validator: validator,
+          result: result
+        });
+      }).catch(reject);
+    } else {
+      try {
+        resolve({
+          field: field,
+          validator: validator,
+          result: validator.fn(validator.data)
+        });
+      } catch (e) {
+        reject(e);
+      }
+    }
+  });
+};
+
 var initializeFunctions = function initializeFunctions(functionsData, functionsList, functionArguments) {
   var initializeFunctionsData = [];
   var _iteratorNormalCompletion2 = true;
@@ -111,6 +141,7 @@ var initializeFunctions = function initializeFunctions(functionsData, functionsL
 
       initializeFunctionsData.push({
         fn: functionObject,
+        isPromise: functionObject.constructor.name === 'AsyncFunction',
         data: (0, _extends3.default)({
           options: functionOptions
         }, functionArguments)
@@ -175,5 +206,6 @@ module.exports = {
   filterDataByFields: filterDataByFields,
   initializeFunctions: initializeFunctions,
   isDateValid: isDateValid,
-  formatDate: formatDate
+  formatDate: formatDate,
+  initializePromise: initializePromise
 };

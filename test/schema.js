@@ -129,7 +129,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {id: 'test'}))
         } catch (e) {
-            SchemaDataValidate = e.id[0].message
+            SchemaDataValidate = e.id[0]
         }
         
         expect(SchemaDataValidate).to.eql('id has incorrect type')
@@ -141,7 +141,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {email: 150}))
         } catch (e) {
-            SchemaDataValidate = e.email[0].message
+            SchemaDataValidate = e.email[0]
         }
         
         expect(SchemaDataValidate).to.eql('email has incorrect type')
@@ -153,7 +153,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {active: 1}))
         } catch (e) {
-            SchemaDataValidate = e.active[0].message
+            SchemaDataValidate = e.active[0]
         }
         
         expect(SchemaDataValidate).to.eql('active has incorrect type')
@@ -165,7 +165,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {createdAt: 'test'}))
         } catch (e) {
-            SchemaDataValidate = e.createdAt[0].message
+            SchemaDataValidate = e.createdAt[0]
         }
         
         expect(SchemaDataValidate).to.eql('createdAt has incorrect date format')
@@ -177,7 +177,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {informations: 'test'}))
         } catch (e) {
-            SchemaDataValidate = e.informations[0].message
+            SchemaDataValidate = e.informations[0]
         }
         
         expect(SchemaDataValidate).to.eql('informations has incorrect type')
@@ -189,7 +189,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {roles: 'test'}))
         } catch (e) {
-            SchemaDataValidate = e.roles[0].message
+            SchemaDataValidate = e.roles[0]
         }
         
         expect(SchemaDataValidate).to.eql('roles has incorrect type')
@@ -201,7 +201,7 @@ describe('Schema', () => {
         try {
             SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {email: 'test@'}))
         } catch (e) {
-            SchemaDataValidate = e.email[0].message
+            SchemaDataValidate = e.email[0]
         }
         
         expect(SchemaDataValidate).to.eql('email has incorrect email format')
@@ -223,7 +223,7 @@ describe('Schema', () => {
             SchemaDataValidate = []
             Object.keys(e).forEach((name) => {
                 for (let error of e[name]) {
-                    SchemaDataValidate.push(error.message)
+                    SchemaDataValidate.push(error)
                 }
             })
         }
@@ -259,7 +259,7 @@ describe('Schema', () => {
             SchemaDataValidate = []
             Object.keys(e).forEach((name) => {
                 for (let error of e[name]) {
-                    SchemaDataValidate.push(error.message)
+                    SchemaDataValidate.push(error)
                 }
             })
         }
@@ -281,7 +281,7 @@ describe('Schema', () => {
             SchemaDataValidate = []
             Object.keys(e).forEach((name) => {
                 for (let error of e[name]) {
-                    SchemaDataValidate.push(error.message)
+                    SchemaDataValidate.push(error)
                 }
             })
         }
@@ -302,6 +302,12 @@ describe('Schema', () => {
                     ({value}) => {
                         if (value > 100) {
                             return 'Test Custom Error'
+                        }
+                        return true
+                    },
+                    async ({value}) => {
+                        if (value > 100) {
+                            return 'async Test Custom Error'
                         }
                         return true
                     },
@@ -326,13 +332,14 @@ describe('Schema', () => {
             SchemaDataValidate = []
             Object.keys(e).forEach((name) => {
                 for (let error of e[name]) {
-                    SchemaDataValidate.push(error.message)
+                    SchemaDataValidate.push(error)
                 }
             })
         }
         
         expect(SchemaDataValidate).to.eql([ 
             "Test Custom Error",
+            "async Test Custom Error",
             "Test Custom Error Options"
         ])
     })

@@ -68,7 +68,7 @@ var Schema = function Schema(schema) {
 
   this.validate = function (data) {
     var dataValidate = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields);
-    var errors = [];
+    var promises = [];
 
     Object.keys(_this.fields).forEach(function (field) {
       var validatorsByField = (0, _helper.initializeFunctions)(_this.validators[field], _validators2.default, {
@@ -78,7 +78,6 @@ var Schema = function Schema(schema) {
         defaultValue: _this.fields[field]
       });
 
-      var previousStatus = true;
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
@@ -87,15 +86,7 @@ var Schema = function Schema(schema) {
         for (var _iterator2 = validatorsByField[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var validator = _step2.value;
 
-          var isValid = validator.fn((0, _extends3.default)({}, validator.data, { previousStatus: previousStatus }));
-          previousStatus = isValid;
-          if (isValid !== true) {
-            if (typeof isValid === 'string') {
-              errors.push({ field: field, error: new Error(isValid) });
-            } else {
-              errors.push({ field: field, error: isValid });
-            }
-          }
+          promises.push((0, _helper.initializePromise)(field, validator));
         }
       } catch (err) {
         _didIteratorError2 = true;
@@ -114,11 +105,17 @@ var Schema = function Schema(schema) {
     });
 
     return new Promise(function (resolve, reject) {
-      if (errors.length > 0) {
-        reject((0, _helper.groupErrors)(errors));
-      } else {
-        resolve(dataValidate);
-      }
+      Promise.all(promises).then(function (validatorsData) {
+        var errors = (0, _helper.groupErrors)(validatorsData);
+
+        if (Object.keys(errors).length > 0) {
+          reject(errors);
+        } else {
+          resolve(dataValidate);
+        }
+      }).catch(function (error) {
+        reject(error);
+      });
     });
   };
 

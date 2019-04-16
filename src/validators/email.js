@@ -1,10 +1,9 @@
 import { getTypeOfValue } from '../helper'
 
-export default function({name, value, defaultValue, previousStatus}) {
+export default function({name, value, defaultValue}) {
   if (typeof value !== 'undefined' &&
         getTypeOfValue(value) === 'string' &&
-        value !== defaultValue &&
-        previousStatus === true
+        value !== defaultValue
   ) {
     if (
       value.length < 254 &&

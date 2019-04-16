@@ -15,11 +15,17 @@ const clone = (data) => {
 const groupErrors = (errors) => {
   let group = {}
   for (let error of errors) {
-    if (typeof group[error.field] === 'undefined') {
-      group[error.field] = []
-    }
+    if (error.result !== true) {
+      if (typeof group[error.field] === 'undefined') {
+        group[error.field] = []
+      }
 
-    group[error.field].push(error.error)
+      if (typeof error.result !== 'string') {
+        group[error.field].push(error.result.message)
+      } else {
+        group[error.field].push(error.result)
+      }
+    }
   }
   return group
 }
@@ -45,6 +51,30 @@ const getTypeOfValue = (value) => {
   return typeOfValue
 }
 
+const initializePromise = (field, validator) => {
+  return new Promise((resolve, reject) => {
+    if (validator.isPromise) {
+      validator.fn(validator.data).then((result) => {
+        resolve({
+          field: field,
+          validator: validator,
+          result: result,
+        })
+      }).catch(reject)
+    } else {
+      try {
+        resolve({
+          field: field,
+          validator: validator,
+          result: validator.fn(validator.data),
+        })
+      } catch (e) {
+        reject(e)
+      }
+    }
+  })
+}
+
 const initializeFunctions = (functionsData, functionsList, functionArguments) => {
   let initializeFunctionsData = []
   for (let functionData of functionsData) {
@@ -66,6 +96,7 @@ const initializeFunctions = (functionsData, functionsList, functionArguments) =>
 
     initializeFunctionsData.push({
       fn: functionObject,
+      isPromise: functionObject.constructor.name === 'AsyncFunction',
       data: {
         options: functionOptions,
         ...functionArguments,
@@ -97,4 +128,5 @@ module.exports = {
   initializeFunctions,
   isDateValid,
   formatDate,
+  initializePromise,
 }

@@ -1,6 +1,6 @@
 import Filters from './filters'
 import Validators from './validators'
-import { clone, groupErrors, getTypeName, initializeFunctions, filterDataByFields } from './helper'
+import { clone, groupErrors, initializePromise, getTypeName, initializeFunctions, filterDataByFields } from './helper'
 
 class Schema {
   constructor(schema) {
@@ -95,7 +95,7 @@ class Schema {
 
   validate = (data) => {
     let dataValidate = filterDataByFields(clone(data), this.fields)
-    let errors = []
+    let promises = []
 
     Object.keys(this.fields).forEach((field) => {
       const validatorsByField = initializeFunctions(this.validators[field], Validators, {
@@ -105,26 +105,23 @@ class Schema {
         defaultValue: this.fields[field],
       })
 
-      let previousStatus = true
       for (let validator of validatorsByField) {
-        const isValid = validator.fn({...validator.data, previousStatus: previousStatus})
-        previousStatus = isValid
-        if (isValid !== true) {
-          if (typeof isValid === 'string') {
-            errors.push({ field: field, error: new Error(isValid) })
-          } else {
-            errors.push({ field: field, error: isValid })
-          }
-        }
+        promises.push(initializePromise(field, validator))
       }
     })
 
     return new Promise((resolve, reject) => {
-      if (errors.length > 0) {
-        reject(groupErrors(errors))
-      } else {
-        resolve(dataValidate)
-      }
+      Promise.all(promises).then((validatorsData) => {
+        const errors = groupErrors(validatorsData)
+
+        if (Object.keys(errors).length > 0) {
+          reject(errors)
+        } else {
+          resolve(dataValidate)
+        }
+      }).catch((error) => {
+        reject(error)
+      })
     })
   }
 

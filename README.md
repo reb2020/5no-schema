@@ -24,13 +24,12 @@ const schemaJson = {
     }
 }
 
-const customFilertOrValidator = ({name, type, value, defaultValue, options, previousStatus}) {
+const customFilertOrValidator = ({name, type, value, defaultValue, options}) {
   //name field
   //type field
   //value field
   //defaultValue field
   //options custom data
-  //previousStatus 
 }
    
 ```
@@ -55,6 +54,31 @@ const schemaJson = {
                         },
                         options: {
                             step: 100
+                        }
+                    }
+                ],
+        validators: [
+                    ({value}) => {
+                        if (value > 100) {
+                            return 'Test Custom Error'
+                        }
+                        return true
+                    },
+                    async ({value}) => {
+                        if (value > 100) {
+                            return 'async Test Custom Error'
+                        }
+                        return true
+                    },
+                    {
+                        fn: ({value, options}) => {
+                            if (value > 100) {
+                                return options.message
+                            }
+                            return true
+                        },
+                        options: {
+                            message: 'Test Custom Error Options'
                         }
                     }
                 ]
@@ -130,7 +154,7 @@ SchemaData.validate(SchemaDataFiltered).then(function(data) {
 
     Object.keys(errors).forEach((name) => {
         for (let error of errors[name]) {
-            console.log(error.message)
+            console.log(error)
         }
     })
 })
