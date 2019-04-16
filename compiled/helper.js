@@ -93,25 +93,13 @@ var getTypeOfValue = function getTypeOfValue(value) {
 
 var initializePromise = function initializePromise(field, validator) {
   return new Promise(function (resolve, reject) {
-    if (validator.isPromise) {
-      validator.fn(validator.data).then(function (result) {
-        resolve({
-          field: field,
-          validator: validator,
-          result: result
-        });
-      }).catch(reject);
-    } else {
-      try {
-        resolve({
-          field: field,
-          validator: validator,
-          result: validator.fn(validator.data)
-        });
-      } catch (e) {
-        reject(e);
-      }
-    }
+    Promise.resolve(validator.fn(validator.data)).then(function (result) {
+      resolve({
+        field: field,
+        validator: validator,
+        result: result
+      });
+    }).catch(reject);
   });
 };
 
