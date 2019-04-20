@@ -16,6 +16,7 @@ npm install --save 5no-schema
 const schemaJson = {
     [name]: {
       type: Number, // Number, String, Boolean, Date, Array, Object
+      schema: {}, // Can describe object schema
       defaultValue: null, // This value is optionally
       format: 'YYYY-MM-DD HH:mm:ss', // This value only for Date type
       required: true, // true or false
@@ -107,7 +108,20 @@ const schemaJson = {
     },
     informations: {
       type: Object,
-      defaultValue: null
+      schema: {
+        firstName: {
+          type: String,
+          required: true
+        },
+        lastName: {
+          type: String,
+          required: true
+        }
+      }
+    },
+    address: {
+      type: Object,
+      defaultValue: null,
     },
     roles: {
       type: Array,
@@ -122,7 +136,8 @@ const schemaJsonData = {
     createdAt: '2018-12-12 12:12:12',
     updatedAt: '2018-12-12 12:12:12',
     informations: {
-      firstName: 'Test'
+        firstName: 'FirstName',
+        lastName: 'LastNname'
     },
     roles: [
       'customer',
@@ -141,7 +156,7 @@ const SchemaDataFiltered = SchemaData.filter(schemaJsonData)
   active: true,
   createdAt: 2018-12-12T10:12:12.000Z,
   updatedAt: '2018-12-12',
-  informations: { firstName: 'Test' },
+  informations: { firstName: 'FirstName', lastName: 'LastNname' },
   roles: [ 'customer', 'admin' ] 
 }
 */
@@ -151,6 +166,17 @@ SchemaData.validate(SchemaDataFiltered).then(function(data) {
     console.log(data)
 }).catch(function(errors) {
     //errors = The object consist of fields which have errors
+
+    /*
+    { 
+      email: [ 'email is required' ],
+      informations:
+      { 
+        firstName: [ 'firstName is required' ],
+        lastName: [ 'lastName is required' ] 
+      } 
+    }
+    */
 
     Object.keys(errors).forEach((name) => {
         for (let error of errors[name]) {
@@ -191,6 +217,19 @@ const SchemaDataJsonOptions = SchemaData.json()
       required: false
     },
     informations: {
+      type: "object",
+      schema: {
+        firstName: {
+          type: "string",
+          required: true
+        },
+        lastName: {
+          type: "string",
+          required: true
+        }
+      }
+    },
+    address: {
       type: "object",
       defaultValue: null,
       required: false

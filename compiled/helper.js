@@ -40,12 +40,14 @@ var groupErrors = function groupErrors(errors) {
     for (var _iterator = errors[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var error = _step.value;
 
-      if (error.result !== true) {
+      if (typeof error.result !== 'undefined' && error.result !== true) {
         if (typeof group[error.field] === 'undefined') {
           group[error.field] = [];
         }
 
-        if (typeof error.result !== 'string') {
+        if (typeof error.child !== 'undefined' && error.child === true) {
+          group[error.field] = error.result;
+        } else if (getTypeOfValue(error.result) === 'error') {
           group[error.field].push(error.result.message);
         } else {
           group[error.field].push(error.result);
@@ -91,12 +93,63 @@ var getTypeOfValue = function getTypeOfValue(value) {
   return typeOfValue;
 };
 
+var getChildData = function getChildData(allData, result) {
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
+
+  try {
+    for (var _iterator2 = result[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var data = _step2.value;
+
+      if (typeof data.childData !== 'undefined') {
+        allData[data.field] = data.childData;
+      }
+    }
+  } catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+        _iterator2.return();
+      }
+    } finally {
+      if (_didIteratorError2) {
+        throw _iteratorError2;
+      }
+    }
+  }
+
+  return allData;
+};
+
+var initializeChildPromise = function initializeChildPromise(field, schema, data) {
+  return new Promise(function (resolve, reject) {
+    Promise.resolve(schema.validate(data)).then(function (result) {
+      resolve({
+        field: field,
+        childData: result
+      });
+    }).catch(function (errors) {
+      if (getTypeOfValue(errors) !== 'object') {
+        reject(errors);
+      }
+      resolve({
+        field: field,
+        child: true,
+        result: errors
+      });
+    });
+  });
+};
+
 var initializePromise = function initializePromise(field, validator) {
   return new Promise(function (resolve, reject) {
     Promise.resolve(validator.fn(validator.data)).then(function (result) {
       resolve({
         field: field,
-        validator: validator,
+        child: false,
         result: result
       });
     }).catch(reject);
@@ -105,13 +158,13 @@ var initializePromise = function initializePromise(field, validator) {
 
 var initializeFunctions = function initializeFunctions(functionsData, functionsList, functionArguments) {
   var initializeFunctionsData = [];
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
+  var _iteratorNormalCompletion3 = true;
+  var _didIteratorError3 = false;
+  var _iteratorError3 = undefined;
 
   try {
-    for (var _iterator2 = functionsData[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-      var functionData = _step2.value;
+    for (var _iterator3 = functionsData[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      var functionData = _step3.value;
 
       var functionObject = functionData;
       var functionOptions = {};
@@ -129,44 +182,10 @@ var initializeFunctions = function initializeFunctions(functionsData, functionsL
 
       initializeFunctionsData.push({
         fn: functionObject,
-        isPromise: functionObject.constructor.name === 'AsyncFunction',
         data: (0, _extends3.default)({
           options: functionOptions
         }, functionArguments)
       });
-    }
-  } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2.return) {
-        _iterator2.return();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
-      }
-    }
-  }
-
-  return initializeFunctionsData;
-};
-
-var filterDataByFields = function filterDataByFields(data, fields) {
-  var returnData = {};
-  var allowFields = Object.keys(fields);
-  var _iteratorNormalCompletion3 = true;
-  var _didIteratorError3 = false;
-  var _iteratorError3 = undefined;
-
-  try {
-    for (var _iterator3 = Object.keys(data)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-      var field = _step3.value;
-
-      if (allowFields.includes(field)) {
-        returnData[field] = data[field];
-      }
     }
   } catch (err) {
     _didIteratorError3 = true;
@@ -183,6 +202,39 @@ var filterDataByFields = function filterDataByFields(data, fields) {
     }
   }
 
+  return initializeFunctionsData;
+};
+
+var filterDataByFields = function filterDataByFields(data, fields) {
+  var returnData = {};
+  var allowFields = Object.keys(fields);
+  var _iteratorNormalCompletion4 = true;
+  var _didIteratorError4 = false;
+  var _iteratorError4 = undefined;
+
+  try {
+    for (var _iterator4 = Object.keys(data)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+      var field = _step4.value;
+
+      if (allowFields.includes(field)) {
+        returnData[field] = data[field];
+      }
+    }
+  } catch (err) {
+    _didIteratorError4 = true;
+    _iteratorError4 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion4 && _iterator4.return) {
+        _iterator4.return();
+      }
+    } finally {
+      if (_didIteratorError4) {
+        throw _iteratorError4;
+      }
+    }
+  }
+
   return returnData;
 };
 
@@ -193,7 +245,9 @@ module.exports = {
   getTypeName: getTypeName,
   filterDataByFields: filterDataByFields,
   initializeFunctions: initializeFunctions,
+  initializeChildPromise: initializeChildPromise,
   isDateValid: isDateValid,
   formatDate: formatDate,
-  initializePromise: initializePromise
+  initializePromise: initializePromise,
+  getChildData: getChildData
 };

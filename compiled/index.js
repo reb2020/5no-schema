@@ -20,7 +20,7 @@ var _helper = require('./helper');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Schema = function Schema(schema) {
+var Schema = function Schema(fieldsSchema) {
   var _this = this;
 
   (0, _classCallCheck3.default)(this, Schema);
@@ -102,6 +102,10 @@ var Schema = function Schema(schema) {
           }
         }
       }
+
+      if (_this.schemas[field]) {
+        promises.push((0, _helper.initializeChildPromise)(field, _this.schemas[field], dataValidate[field]));
+      }
     });
 
     return new Promise(function (resolve, reject) {
@@ -111,7 +115,7 @@ var Schema = function Schema(schema) {
         if (Object.keys(errors).length > 0) {
           reject(errors);
         } else {
-          resolve(dataValidate);
+          resolve((0, _helper.getChildData)(dataValidate, validatorsData));
         }
       }).catch(function (error) {
         reject(error);
@@ -135,6 +139,12 @@ var Schema = function Schema(schema) {
       if (typeof _this.formats[field] !== 'undefined') {
         data[field]['format'] = _this.formats[field];
       }
+
+      if (typeof _this.schemas[field] !== 'undefined') {
+        data[field]['schema'] = _this.schemas[field].json();
+        delete data[field]['required'];
+        delete data[field]['defaultValue'];
+      }
     });
 
     return data;
@@ -148,15 +158,17 @@ var Schema = function Schema(schema) {
   this.types = {};
   this.required = {};
   this.formats = {};
+  this.schemas = {};
 
-  Object.keys(schema).forEach(function (field) {
-    var _schema$field = schema[field],
-        type = _schema$field.type,
-        defaultValue = _schema$field.defaultValue,
-        required = _schema$field.required,
-        validators = _schema$field.validators,
-        filters = _schema$field.filters,
-        format = _schema$field.format;
+  Object.keys(fieldsSchema).forEach(function (field) {
+    var _fieldsSchema$field = fieldsSchema[field],
+        type = _fieldsSchema$field.type,
+        defaultValue = _fieldsSchema$field.defaultValue,
+        required = _fieldsSchema$field.required,
+        validators = _fieldsSchema$field.validators,
+        filters = _fieldsSchema$field.filters,
+        format = _fieldsSchema$field.format,
+        schema = _fieldsSchema$field.schema;
 
     var typeName = (0, _helper.getTypeName)(type);
 
@@ -174,6 +186,10 @@ var Schema = function Schema(schema) {
     if (required) {
       _this.required[field] = true;
       _this.validators[field].push('required');
+    }
+
+    if (schema) {
+      _this.schemas[field] = new Schema(schema);
     }
 
     var dateFN = {

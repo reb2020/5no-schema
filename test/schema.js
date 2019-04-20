@@ -31,7 +31,20 @@ const schemaJson = {
     },
     informations: {
       type: Object,
-      defaultValue: null
+      schema: {
+        firstName: {
+          type: String,
+          required: true
+        },
+        lastName: {
+          type: String,
+          required: true
+        }
+      }
+    },
+    address: {
+      type: Object,
+      defaultValue: null,
     },
     roles: {
       type: Array,
@@ -67,6 +80,19 @@ const schemaJsonOptions = {
     },
     informations: {
       type: "object",
+      schema: {
+        firstName: {
+          type: "string",
+          required: true
+        },
+        lastName: {
+          type: "string",
+          required: true
+        }
+      }
+    },
+    address: {
+      type: "object",
       defaultValue: null,
       required: false
     },
@@ -85,7 +111,8 @@ const schemaJsonData = {
     createdAt: new Date('2018-12-12 12:12:12'),
     updatedAt: '2018-12-12',
     informations: {
-        firstName: 'Test'
+        firstName: 'FirstName',
+        lastName: 'LastNname'
     },
     roles: [
         'customer',
@@ -100,7 +127,8 @@ const schemaJsonDataReturn = {
     createdAt: new Date('2018-12-12 12:12:12'),
     updatedAt: '2018-12-12',
     informations: {
-        firstName: 'Test'
+        firstName: 'FirstName',
+        lastName: 'LastNname'
     },
     roles: [
         'customer',
@@ -175,12 +203,12 @@ describe('Schema', () => {
         const SchemaData = new Schema(schemaJson)
         let SchemaDataValidate = null
         try {
-            SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {informations: 'test'}))
+            SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {address: 'test'}))
         } catch (e) {
-            SchemaDataValidate = e.informations[0]
+            SchemaDataValidate = e.address[0]
         }
         
-        expect(SchemaDataValidate).to.eql('informations has incorrect type')
+        expect(SchemaDataValidate).to.eql('address has incorrect type')
     })
     
     it('validator has to return error of type Array', async () => {
@@ -220,22 +248,24 @@ describe('Schema', () => {
                 roles: '222'
             }))
         } catch (e) {
-            SchemaDataValidate = []
-            Object.keys(e).forEach((name) => {
-                for (let error of e[name]) {
-                    SchemaDataValidate.push(error)
-                }
-            })
+            SchemaDataValidate = e
         }
         
-        expect(SchemaDataValidate).to.eql([ 
-            "id has incorrect type",
-            "email has incorrect type",
-            "active has incorrect type",
-            "createdAt has incorrect type",
-            "informations has incorrect type",
-            "roles has incorrect type"
-        ])
+        expect(SchemaDataValidate).to.eql({ 
+            id: ["id has incorrect type"],
+            email: ["email has incorrect type"],
+            active: ["active has incorrect type"],
+            createdAt: ["createdAt has incorrect type"],
+            roles: ["roles has incorrect type"],
+            informations: {
+                firstName: [
+                     "firstName is required"
+                ],
+                lastName: [
+                     "lastName is required"
+                ]
+            }
+        })
     })
 
     it('validator does not need to return errors of not required fields', async () => {
@@ -256,17 +286,18 @@ describe('Schema', () => {
                 email: ''
             })
         } catch (e) {
-            SchemaDataValidate = []
-            Object.keys(e).forEach((name) => {
-                for (let error of e[name]) {
-                    SchemaDataValidate.push(error)
-                }
-            })
+            SchemaDataValidate = e
         }
         
         expect(SchemaDataValidate).to.eql({
-            id: 123,
-            email: ''
+            informations: {
+                firstName: [
+                     "firstName is required"
+                ],
+                lastName: [
+                     "lastName is required"
+                ]
+            }
         })
     })
     
@@ -278,18 +309,21 @@ describe('Schema', () => {
                 active: false
             })
         } catch (e) {
-            SchemaDataValidate = []
-            Object.keys(e).forEach((name) => {
-                for (let error of e[name]) {
-                    SchemaDataValidate.push(error)
-                }
-            })
+            SchemaDataValidate = e
         }
         
-        expect(SchemaDataValidate).to.eql([ 
-            "id is required",
-            "email is required"
-        ])
+        expect(SchemaDataValidate).to.eql({ 
+            id: ["id is required"],
+            email: ["email is required"],
+            informations: {
+                firstName: [
+                     "firstName is required"
+                ],
+                lastName: [
+                     "lastName is required"
+                ]
+            }
+        })
     })
     
     it('custom validator has to return error', async () => {

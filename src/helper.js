@@ -15,12 +15,14 @@ const clone = (data) => {
 const groupErrors = (errors) => {
   let group = {}
   for (let error of errors) {
-    if (error.result !== true) {
+    if (typeof error.result !== 'undefined' && error.result !== true) {
       if (typeof group[error.field] === 'undefined') {
         group[error.field] = []
       }
 
-      if (typeof error.result !== 'string') {
+      if (typeof error.child !== 'undefined' && error.child === true) {
+        group[error.field] = error.result
+      } else if (getTypeOfValue(error.result) === 'error') {
         group[error.field].push(error.result.message)
       } else {
         group[error.field].push(error.result)
@@ -51,12 +53,41 @@ const getTypeOfValue = (value) => {
   return typeOfValue
 }
 
+const getChildData = (allData, result) => {
+  for (let data of result) {
+    if (typeof data.childData !== 'undefined') {
+      allData[data.field] = data.childData
+    }
+  }
+  return allData
+}
+
+const initializeChildPromise = (field, schema, data) => {
+  return new Promise((resolve, reject) => {
+    Promise.resolve(schema.validate(data)).then((result) => {
+      resolve({
+        field: field,
+        childData: result,
+      })
+    }).catch((errors) => {
+      if (getTypeOfValue(errors) !== 'object') {
+        reject(errors)
+      }
+      resolve({
+        field: field,
+        child: true,
+        result: errors,
+      })
+    })
+  })
+}
+
 const initializePromise = (field, validator) => {
   return new Promise((resolve, reject) => {
     Promise.resolve(validator.fn(validator.data)).then((result) => {
       resolve({
         field: field,
-        validator: validator,
+        child: false,
         result: result,
       })
     }).catch(reject)
@@ -84,7 +115,6 @@ const initializeFunctions = (functionsData, functionsList, functionArguments) =>
 
     initializeFunctionsData.push({
       fn: functionObject,
-      isPromise: functionObject.constructor.name === 'AsyncFunction',
       data: {
         options: functionOptions,
         ...functionArguments,
@@ -114,7 +144,9 @@ module.exports = {
   getTypeName,
   filterDataByFields,
   initializeFunctions,
+  initializeChildPromise,
   isDateValid,
   formatDate,
   initializePromise,
+  getChildData,
 }

@@ -1,9 +1,9 @@
 import Filters from './filters'
 import Validators from './validators'
-import { clone, groupErrors, initializePromise, getTypeName, initializeFunctions, filterDataByFields } from './helper'
+import { clone, groupErrors, initializePromise, getTypeName, initializeFunctions, initializeChildPromise, filterDataByFields, getChildData } from './helper'
 
 class Schema {
-  constructor(schema) {
+  constructor(fieldsSchema) {
     let allowTypes = [
       'string',
       'number',
@@ -19,9 +19,10 @@ class Schema {
     this.types = {}
     this.required = {}
     this.formats = {}
+    this.schemas = {}
 
-    Object.keys(schema).forEach((field) => {
-      const { type, defaultValue, required, validators, filters, format } = schema[field]
+    Object.keys(fieldsSchema).forEach((field) => {
+      const { type, defaultValue, required, validators, filters, format, schema } = fieldsSchema[field]
       const typeName = getTypeName(type)
 
       if (!allowTypes.includes(typeName)) {
@@ -38,6 +39,10 @@ class Schema {
       if (required) {
         this.required[field] = true
         this.validators[field].push('required')
+      }
+
+      if (schema) {
+        this.schemas[field] = new Schema(schema)
       }
 
       let dateFN = {
@@ -108,6 +113,10 @@ class Schema {
       for (let validator of validatorsByField) {
         promises.push(initializePromise(field, validator))
       }
+
+      if (this.schemas[field]) {
+        promises.push(initializeChildPromise(field, this.schemas[field], dataValidate[field]))
+      }
     })
 
     return new Promise((resolve, reject) => {
@@ -117,7 +126,7 @@ class Schema {
         if (Object.keys(errors).length > 0) {
           reject(errors)
         } else {
-          resolve(dataValidate)
+          resolve(getChildData(dataValidate, validatorsData))
         }
       }).catch((error) => {
         reject(error)
@@ -140,6 +149,12 @@ class Schema {
 
       if (typeof this.formats[field] !== 'undefined') {
         data[field]['format'] = this.formats[field]
+      }
+
+      if (typeof this.schemas[field] !== 'undefined') {
+        data[field]['schema'] = this.schemas[field].json()
+        delete data[field]['required']
+        delete data[field]['defaultValue']
       }
     })
 
