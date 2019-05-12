@@ -25,11 +25,13 @@ const schemaJson = {
     }
 }
 
-const customFilertOrValidator = ({name, type, value, defaultValue, options}) {
-  //name field
-  //type field
-  //value field
-  //defaultValue field
+const customFilertOrValidator = ({name, type, value, defaultValue, previousResult, allValues, options}) {
+  //name - name of field
+  //type - type of field
+  //value - current value
+  //defaultValue - default value of field
+  //previousResult - result previous validator
+  //allValues - all data
   //options custom data
 }
    
@@ -59,11 +61,13 @@ const schemaJson = {
                     }
                 ],
         validators: [
-                    ({value}) => {
-                        if (value > 100) {
+                    ({value, previousResult}) => {
+                        if (previousResult === true) {
+                          if (value > 100) {
                             return 'Test Custom Error'
+                          }
+                          return true
                         }
-                        return true
                     },
                     async ({value}) => {
                         if (value > 100) {
@@ -127,6 +131,14 @@ const schemaJson = {
       type: Array,
       defaultValue: null
     }
+    status: {
+      type: String,
+      defaultValue: 'active',
+      allowedValues: [
+        'active',
+        'banned'
+      ],
+    }
 }
 
 const schemaJsonData = {
@@ -142,7 +154,8 @@ const schemaJsonData = {
     roles: [
       'customer',
       'admin'
-    ]
+    ],
+    status: 'active'
 }
 
 const SchemaData = new Schema(schemaJson)
@@ -157,7 +170,8 @@ const SchemaDataFiltered = SchemaData.filter(schemaJsonData)
   createdAt: 2018-12-12T10:12:12.000Z,
   updatedAt: '2018-12-12',
   informations: { firstName: 'FirstName', lastName: 'LastNname' },
-  roles: [ 'customer', 'admin' ] 
+  roles: [ 'customer', 'admin' ],
+  status: 'active'
 }
 */
 
@@ -238,6 +252,15 @@ const SchemaDataJsonOptions = SchemaData.json()
       type: "array",
       defaultValue: null,
       required: false
+    },
+    status: {
+      type: "string",
+      defaultValue: null,
+      required: false,
+      allowedValues: [
+        'active',
+        'banned'
+      ]
     }
 }
 */

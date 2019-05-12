@@ -40,13 +40,15 @@ var groupErrors = function groupErrors(errors) {
     for (var _iterator = errors[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var error = _step.value;
 
-      if (typeof error.result !== 'undefined' && error.result !== true) {
+      if (typeof error.result !== 'undefined' && (error.child !== true && error.result !== true || error.child === true && error.errors)) {
         if (typeof group[error.field] === 'undefined') {
           group[error.field] = [];
         }
 
         if (typeof error.child !== 'undefined' && error.child === true) {
-          group[error.field] = error.result;
+          if (group[error.field].length === 0) {
+            group[error.field] = error.errors;
+          }
         } else if (getTypeOfValue(error.result) === 'error') {
           group[error.field].push(error.result.message);
         } else {
@@ -102,8 +104,8 @@ var getChildData = function getChildData(allData, result) {
     for (var _iterator2 = result[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
       var data = _step2.value;
 
-      if (typeof data.childData !== 'undefined') {
-        allData[data.field] = data.childData;
+      if (data.child === true) {
+        allData[data.field] = data.result;
       }
     }
   } catch (err) {
@@ -125,34 +127,40 @@ var getChildData = function getChildData(allData, result) {
 };
 
 var initializeChildPromise = function initializeChildPromise(field, schema, data) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
     Promise.resolve(schema.validate(data)).then(function (result) {
       resolve({
         field: field,
-        childData: result
+        child: true,
+        errors: null,
+        result: result
       });
     }).catch(function (errors) {
-      if (getTypeOfValue(errors) !== 'object') {
-        reject(errors);
-      }
       resolve({
         field: field,
         child: true,
-        result: errors
+        errors: errors,
+        result: null
       });
     });
   });
 };
 
 var initializePromise = function initializePromise(field, validator) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
     Promise.resolve(validator.fn(validator.data)).then(function (result) {
       resolve({
         field: field,
         child: false,
         result: result
       });
-    }).catch(reject);
+    }).catch(function (error) {
+      resolve({
+        field: field,
+        child: false,
+        result: error.message
+      });
+    });
   });
 };
 

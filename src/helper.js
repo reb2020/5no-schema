@@ -15,13 +15,15 @@ const clone = (data) => {
 const groupErrors = (errors) => {
   let group = {}
   for (let error of errors) {
-    if (typeof error.result !== 'undefined' && error.result !== true) {
+    if (typeof error.result !== 'undefined' && ((error.child !== true && error.result !== true) || (error.child === true && error.errors))) {
       if (typeof group[error.field] === 'undefined') {
         group[error.field] = []
       }
 
-      if (typeof error.child !== 'undefined' && error.child === true) {
-        group[error.field] = error.result
+      if ((typeof error.child !== 'undefined' && error.child === true)) {
+        if (group[error.field].length === 0) {
+          group[error.field] = error.errors
+        }
       } else if (getTypeOfValue(error.result) === 'error') {
         group[error.field].push(error.result.message)
       } else {
@@ -55,42 +57,48 @@ const getTypeOfValue = (value) => {
 
 const getChildData = (allData, result) => {
   for (let data of result) {
-    if (typeof data.childData !== 'undefined') {
-      allData[data.field] = data.childData
+    if (data.child === true) {
+      allData[data.field] = data.result
     }
   }
   return allData
 }
 
 const initializeChildPromise = (field, schema, data) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     Promise.resolve(schema.validate(data)).then((result) => {
       resolve({
         field: field,
-        childData: result,
+        child: true,
+        errors: null,
+        result: result,
       })
     }).catch((errors) => {
-      if (getTypeOfValue(errors) !== 'object') {
-        reject(errors)
-      }
       resolve({
         field: field,
         child: true,
-        result: errors,
+        errors: errors,
+        result: null,
       })
     })
   })
 }
 
 const initializePromise = (field, validator) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     Promise.resolve(validator.fn(validator.data)).then((result) => {
       resolve({
         field: field,
         child: false,
         result: result,
       })
-    }).catch(reject)
+    }).catch((error) => {
+      resolve({
+        field: field,
+        child: false,
+        result: error.message,
+      })
+    })
   })
 }
 

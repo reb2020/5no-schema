@@ -17,6 +17,14 @@ const schemaJson = {
           'email'
       ]
     },
+    type: {
+      type: String,
+      required: false,
+      allowedValues: [
+        'active',
+        'banned'
+      ]
+    },
     active: {
       type: Boolean,
       defaultValue: false
@@ -63,6 +71,14 @@ const schemaJsonOptions = {
       type: "string",
       required: true
     },
+    type: {
+      type: "string",
+      required: false,
+      allowedValues: [
+        'active',
+        'banned'
+      ]
+    },
     active: {
       type: "boolean",
       defaultValue: false,
@@ -105,8 +121,9 @@ const schemaJsonOptions = {
 
 const schemaJsonData = {
     id: 123,
-    email: 'test@test.test',
+    email: 'customer@test.test',
     active: true,
+    type: 'active',
     test: 'Param Is Not Described In Schema',
     createdAt: new Date('2018-12-12 12:12:12'),
     updatedAt: '2018-12-12',
@@ -122,8 +139,9 @@ const schemaJsonData = {
 
 const schemaJsonDataReturn = {
     id: 123,
-    email: 'test@test.test',
+    email: 'customer@test.test',
     active: true,
+    type: 'active',
     createdAt: new Date('2018-12-12 12:12:12'),
     updatedAt: '2018-12-12',
     informations: {
@@ -235,6 +253,18 @@ describe('Schema', () => {
         expect(SchemaDataValidate).to.eql('email has incorrect email format')
     })
     
+    it('validator has to return error of type String with additional validator by allowedValues', async () => {
+        const SchemaData = new Schema(schemaJson)
+        let SchemaDataValidate = null
+        try {
+            SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {type: 'test'}))
+        } catch (e) {
+            SchemaDataValidate = e.type[0]
+        }
+        
+        expect(SchemaDataValidate).to.eql('type should be equal to one of the allowed values')
+    })
+    
     it('validator has to return errors', async () => {
         const SchemaData = new Schema(schemaJson)
         let SchemaDataValidate = null
@@ -244,7 +274,7 @@ describe('Schema', () => {
                 email: 112,
                 active: 0,
                 createdAt: true,
-                informations: 'test',
+                informations: "1000",
                 roles: '222'
             }))
         } catch (e) {
@@ -257,14 +287,7 @@ describe('Schema', () => {
             active: ["active has incorrect type"],
             createdAt: ["createdAt has incorrect type"],
             roles: ["roles has incorrect type"],
-            informations: {
-                firstName: [
-                     "firstName is required"
-                ],
-                lastName: [
-                     "lastName is required"
-                ]
-            }
+            informations: ["informations has incorrect type"]
         })
     })
 
@@ -346,11 +369,13 @@ describe('Schema', () => {
                         return true
                     },
                     {
-                        fn: ({value, options}) => {
-                            if (value > 100) {
-                                return options.message
+                        fn: ({value, options, previousResult}) => {
+                            if (previousResult === true) {
+                                if (value > 100) {
+                                    return options.message
+                                }
+                                return true
                             }
-                            return true
                         },
                         options: {
                             message: 'Test Custom Error Options'
@@ -373,8 +398,7 @@ describe('Schema', () => {
         
         expect(SchemaDataValidate).to.eql([ 
             "Test Custom Error",
-            "async Test Custom Error",
-            "Test Custom Error Options"
+            "async Test Custom Error"
         ])
     })
   })
@@ -431,11 +455,11 @@ describe('Schema', () => {
             },
         }))
         const SchemaDataFiltered = SchemaData.filter(Object.assign({}, schemaJsonData, {
-            email: '  test@test   ',
+            email: '  customer@test.test   ',
         }))
         
         expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonDataReturn, {
-            email: 'test@test'
+            email: 'customer@test.test'
         }))
     })
     

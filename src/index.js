@@ -20,9 +20,11 @@ class Schema {
     this.required = {}
     this.formats = {}
     this.schemas = {}
+    this.allowedValues = {}
+    this.isChild = false
 
     Object.keys(fieldsSchema).forEach((field) => {
-      const { type, defaultValue, required, validators, filters, format, schema } = fieldsSchema[field]
+      const { type, defaultValue, allowedValues, required, validators, filters, format, schema } = fieldsSchema[field]
       const typeName = getTypeName(type)
 
       if (!allowTypes.includes(typeName)) {
@@ -36,6 +38,16 @@ class Schema {
       this.required[field] = false
       this.formats[field] = format
 
+      if (allowedValues) {
+        this.allowedValues[field] = allowedValues
+        this.validators[field].push({
+          fn: 'enum',
+          options: {
+            allowedValues: allowedValues,
+          },
+        })
+      }
+
       if (required) {
         this.required[field] = true
         this.validators[field].push('required')
@@ -43,6 +55,7 @@ class Schema {
 
       if (schema) {
         this.schemas[field] = new Schema(schema)
+        this.schemas[field].isChild = true
       }
 
       let dateFN = {
@@ -98,39 +111,55 @@ class Schema {
     return dataFilter
   }
 
-  validate = (data) => {
+  validate = async(data) => {
     let dataValidate = filterDataByFields(clone(data), this.fields)
-    let promises = []
+    let promises = {}
 
-    Object.keys(this.fields).forEach((field) => {
+    for (let field of Object.keys(this.fields)) {
       const validatorsByField = initializeFunctions(this.validators[field], Validators, {
         name: field,
         type: this.types[field],
+        allValues: dataValidate,
+        previousResult: true,
         value: dataValidate[field],
         defaultValue: this.fields[field],
       })
 
+      let previousResult = true
       for (let validator of validatorsByField) {
-        promises.push(initializePromise(field, validator))
+        if (typeof promises[field] === 'undefined') {
+          promises[field] = []
+        }
+        validator.data.previousResult = previousResult
+        const promiseResult = await initializePromise(field, validator)
+        previousResult = promiseResult.result
+        promises[field].push(promiseResult)
       }
 
       if (this.schemas[field]) {
-        promises.push(initializeChildPromise(field, this.schemas[field], dataValidate[field]))
+        if (typeof promises[field] === 'undefined') {
+          promises[field] = []
+        }
+        promises[field].push(await initializeChildPromise(field, this.schemas[field], dataValidate[field]))
       }
-    })
+    }
 
     return new Promise((resolve, reject) => {
-      Promise.all(promises).then((validatorsData) => {
-        const errors = groupErrors(validatorsData)
+      let errors = {}
+      let data = {}
 
-        if (Object.keys(errors).length > 0) {
-          reject(errors)
-        } else {
-          resolve(getChildData(dataValidate, validatorsData))
-        }
-      }).catch((error) => {
-        reject(error)
-      })
+      for (let field of Object.keys(promises)) {
+        const validatorsData = promises[field]
+
+        errors = Object.assign(errors, groupErrors(validatorsData))
+        data = Object.assign(data, getChildData(dataValidate, validatorsData))
+      }
+
+      if (Object.keys(errors).length > 0) {
+        reject(errors)
+      } else {
+        resolve(data)
+      }
     })
   }
 
@@ -149,6 +178,10 @@ class Schema {
 
       if (typeof this.formats[field] !== 'undefined') {
         data[field]['format'] = this.formats[field]
+      }
+
+      if (typeof this.allowedValues[field] !== 'undefined') {
+        data[field]['allowedValues'] = this.allowedValues[field]
       }
 
       if (typeof this.schemas[field] !== 'undefined') {

@@ -20,11 +20,16 @@ var _email = require('./email');
 
 var _email2 = _interopRequireDefault(_email);
 
+var _enum = require('./enum');
+
+var _enum2 = _interopRequireDefault(_enum);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
   type: _type2.default,
   required: _required2.default,
   date: _date2.default,
-  email: _email2.default
+  email: _email2.default,
+  enum: _enum2.default
 };
