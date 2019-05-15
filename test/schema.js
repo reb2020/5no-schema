@@ -174,6 +174,12 @@ const schemaFilterJsonDataReturn = {
     ]
 }
 
+const schemaFilterJsonDataReturnOnePart = {
+    id: 123,
+    active: true,
+    createdAt: new Date('2018-12-12 12:12:12'),
+}
+
 describe('Schema', () => {
   beforeEach(() => {
   })
@@ -454,6 +460,17 @@ describe('Schema', () => {
         }))
         
         expect(SchemaDataFiltered).to.eql(schemaFilterJsonDataReturn)
+    })
+    
+    it('filter has to return one part of correct data types', async () => {
+        const SchemaData = new Schema(schemaJson)
+        const SchemaDataFiltered = await SchemaData.filter(Object.assign({}, {
+            id: '123',
+            active: 1,
+            createdAt: '2018-12-12 12:12:12'
+        }))
+        
+        expect(SchemaDataFiltered).to.eql(schemaFilterJsonDataReturnOnePart)
     })
     
     it('custom filter', async () => {

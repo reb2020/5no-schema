@@ -62,7 +62,7 @@ var Schema = function Schema(fieldsSchema) {
                 previousResult: dataFilter[field]
               });
 
-              if (!(typeof dataFilter[field] !== 'undefined' || dataFilter[field] === _this.fields[field])) {
+              if (!(typeof dataFilter[field] !== 'undefined' && dataFilter[field] !== _this.fields[field])) {
                 _context.next = 49;
                 break;
               }

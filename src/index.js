@@ -104,7 +104,7 @@ class Schema {
           previousResult: dataFilter[field],
         })
 
-        if (typeof dataFilter[field] !== 'undefined' || dataFilter[field] === this.fields[field]) {
+        if (typeof dataFilter[field] !== 'undefined' && dataFilter[field] !== this.fields[field]) {
           let previousResult = dataFilter[field]
           for (let filter of filtersByField) {
             filter.data.previousResult = previousResult
