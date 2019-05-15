@@ -64,9 +64,9 @@ const getChildData = (allData, result) => {
   return allData
 }
 
-const initializeChildPromise = (field, schema, data) => {
+const initializeChildPromise = (field, fn, data) => {
   return new Promise((resolve) => {
-    Promise.resolve(schema.validate(data)).then((result) => {
+    Promise.resolve(fn(data)).then((result) => {
       resolve({
         field: field,
         child: true,
@@ -84,9 +84,9 @@ const initializeChildPromise = (field, schema, data) => {
   })
 }
 
-const initializePromise = (field, validator) => {
+const initializePromise = (field, objectData) => {
   return new Promise((resolve) => {
-    Promise.resolve(validator.fn(validator.data)).then((result) => {
+    Promise.resolve(objectData.fn(objectData.data)).then((result) => {
       resolve({
         field: field,
         child: false,

@@ -160,7 +160,7 @@ const schemaJsonData = {
 
 const SchemaData = new Schema(schemaJson)
 
-const SchemaDataFiltered = SchemaData.filter(schemaJsonData)
+const SchemaDataFiltered = await SchemaData.filter(schemaJsonData)
 
 /*
 { 

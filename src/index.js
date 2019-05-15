@@ -87,64 +87,96 @@ class Schema {
         }
       }
     })
-
-    this.fields = this.filter(this.fields)
   }
 
-  filter = (data) => {
+  filter = async(data) => {
     let dataFilter = filterDataByFields(clone(data), this.fields)
+    let mainErrors = null
 
-    Object.keys(dataFilter).forEach((field) => {
-      const filtersByField = initializeFunctions(this.filters[field], Filters, {
-        name: field,
-        type: this.types[field],
-        defaultValue: this.fields[field],
-      })
+    try {
+      for (let field of Object.keys(this.fields)) {
+        const filtersByField = initializeFunctions(this.filters[field], Filters, {
+          name: field,
+          type: this.types[field],
+          allValues: dataFilter,
+          defaultValue: this.fields[field],
+          value: dataFilter[field],
+          previousResult: dataFilter[field],
+        })
 
-      for (let filter of filtersByField) {
-        if (typeof dataFilter[field] !== 'undefined') {
-          dataFilter[field] = filter.fn({...filter.data, value: dataFilter[field]})
+        if (typeof dataFilter[field] !== 'undefined' || dataFilter[field] === this.fields[field]) {
+          let previousResult = dataFilter[field]
+          for (let filter of filtersByField) {
+            filter.data.previousResult = previousResult
+            filter.data.value = previousResult
+            const promiseResult = await initializePromise(field, filter)
+            previousResult = promiseResult.result
+          }
+
+          dataFilter[field] = previousResult
+
+          if (this.schemas[field]) {
+            const promiseResult = await initializeChildPromise(field, this.schemas[field].filter, dataFilter[field])
+            dataFilter[field] = promiseResult.result
+          }
         }
       }
-    })
+    } catch (e) {
+      mainErrors = e
+    }
 
-    return dataFilter
+    return new Promise((resolve, reject) => {
+      if (mainErrors) {
+        reject(mainErrors)
+      } else {
+        resolve(dataFilter)
+      }
+    })
   }
 
   validate = async(data) => {
     let dataValidate = filterDataByFields(clone(data), this.fields)
     let promises = {}
+    let mainErrors = null
 
-    for (let field of Object.keys(this.fields)) {
-      const validatorsByField = initializeFunctions(this.validators[field], Validators, {
-        name: field,
-        type: this.types[field],
-        allValues: dataValidate,
-        previousResult: true,
-        value: dataValidate[field],
-        defaultValue: this.fields[field],
-      })
+    try {
+      for (let field of Object.keys(this.fields)) {
+        const validatorsByField = initializeFunctions(this.validators[field], Validators, {
+          name: field,
+          type: this.types[field],
+          allValues: dataValidate,
+          previousResult: true,
+          value: dataValidate[field],
+          defaultValue: this.fields[field],
+        })
 
-      let previousResult = true
-      for (let validator of validatorsByField) {
-        if (typeof promises[field] === 'undefined') {
-          promises[field] = []
+        let previousResult = true
+        for (let validator of validatorsByField) {
+          if (typeof promises[field] === 'undefined') {
+            promises[field] = []
+          }
+          validator.data.previousResult = previousResult
+          const promiseResult = await initializePromise(field, validator)
+          previousResult = promiseResult.result
+          promises[field].push(promiseResult)
         }
-        validator.data.previousResult = previousResult
-        const promiseResult = await initializePromise(field, validator)
-        previousResult = promiseResult.result
-        promises[field].push(promiseResult)
-      }
 
-      if (this.schemas[field]) {
-        if (typeof promises[field] === 'undefined') {
-          promises[field] = []
+        if (this.schemas[field]) {
+          if (typeof promises[field] === 'undefined') {
+            promises[field] = []
+          }
+          promises[field].push(await initializeChildPromise(field, this.schemas[field].validate, dataValidate[field]))
         }
-        promises[field].push(await initializeChildPromise(field, this.schemas[field], dataValidate[field]))
       }
+    } catch (e) {
+      mainErrors = e
     }
 
     return new Promise((resolve, reject) => {
+      if (mainErrors) {
+        return reject(mainErrors)
+      }
+
       let errors = {}
       let data = {}
 

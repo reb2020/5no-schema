@@ -126,9 +126,9 @@ var getChildData = function getChildData(allData, result) {
   return allData;
 };
 
-var initializeChildPromise = function initializeChildPromise(field, schema, data) {
+var initializeChildPromise = function initializeChildPromise(field, fn, data) {
   return new Promise(function (resolve) {
-    Promise.resolve(schema.validate(data)).then(function (result) {
+    Promise.resolve(fn(data)).then(function (result) {
       resolve({
         field: field,
         child: true,
@@ -146,9 +146,9 @@ var initializeChildPromise = function initializeChildPromise(field, schema, data
   });
 };
 
-var initializePromise = function initializePromise(field, validator) {
+var initializePromise = function initializePromise(field, objectData) {
   return new Promise(function (resolve) {
-    Promise.resolve(validator.fn(validator.data)).then(function (result) {
+    Promise.resolve(objectData.fn(objectData.data)).then(function (result) {
       resolve({
         field: field,
         child: false,

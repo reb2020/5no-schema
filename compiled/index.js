@@ -8,10 +8,6 @@ var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _extends2 = require('babel-runtime/helpers/extends');
-
-var _extends3 = _interopRequireDefault(_extends2);
-
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -33,70 +29,221 @@ var Schema = function Schema(fieldsSchema) {
 
   (0, _classCallCheck3.default)(this, Schema);
 
-  this.filter = function (data) {
-    var dataFilter = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields);
-
-    Object.keys(dataFilter).forEach(function (field) {
-      var filtersByField = (0, _helper.initializeFunctions)(_this.filters[field], _filters2.default, {
-        name: field,
-        type: _this.types[field],
-        defaultValue: _this.fields[field]
-      });
-
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = filtersByField[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var filter = _step.value;
-
-          if (typeof dataFilter[field] !== 'undefined') {
-            dataFilter[field] = filter.fn((0, _extends3.default)({}, filter.data, { value: dataFilter[field] }));
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-    });
-
-    return dataFilter;
-  };
-
-  this.validate = function () {
+  this.filter = function () {
     var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(data) {
-      var dataValidate, promises, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, field, validatorsByField, previousResult, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, validator, promiseResult;
+      var dataFilter, mainErrors, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, field, filtersByField, previousResult, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, filter, _promiseResult, promiseResult;
 
       return _regenerator2.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              dataValidate = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields);
-              promises = {};
-              _iteratorNormalCompletion2 = true;
-              _didIteratorError2 = false;
-              _iteratorError2 = undefined;
-              _context.prev = 5;
-              _iterator2 = Object.keys(_this.fields)[Symbol.iterator]();
+              dataFilter = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields);
+              mainErrors = null;
+              _context.prev = 2;
+              _iteratorNormalCompletion = true;
+              _didIteratorError = false;
+              _iteratorError = undefined;
+              _context.prev = 6;
+              _iterator = Object.keys(_this.fields)[Symbol.iterator]();
 
-            case 7:
-              if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+            case 8:
+              if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
                 _context.next = 52;
                 break;
               }
 
-              field = _step2.value;
+              field = _step.value;
+              filtersByField = (0, _helper.initializeFunctions)(_this.filters[field], _filters2.default, {
+                name: field,
+                type: _this.types[field],
+                allValues: dataFilter,
+                defaultValue: _this.fields[field],
+                value: dataFilter[field],
+                previousResult: dataFilter[field]
+              });
+
+              if (!(typeof dataFilter[field] !== 'undefined' || dataFilter[field] === _this.fields[field])) {
+                _context.next = 49;
+                break;
+              }
+
+              previousResult = dataFilter[field];
+              _iteratorNormalCompletion2 = true;
+              _didIteratorError2 = false;
+              _iteratorError2 = undefined;
+              _context.prev = 16;
+              _iterator2 = filtersByField[Symbol.iterator]();
+
+            case 18:
+              if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+                _context.next = 29;
+                break;
+              }
+
+              filter = _step2.value;
+
+              filter.data.previousResult = previousResult;
+              filter.data.value = previousResult;
+              _context.next = 24;
+              return (0, _helper.initializePromise)(field, filter);
+
+            case 24:
+              _promiseResult = _context.sent;
+
+              previousResult = _promiseResult.result;
+
+            case 26:
+              _iteratorNormalCompletion2 = true;
+              _context.next = 18;
+              break;
+
+            case 29:
+              _context.next = 35;
+              break;
+
+            case 31:
+              _context.prev = 31;
+              _context.t0 = _context['catch'](16);
+              _didIteratorError2 = true;
+              _iteratorError2 = _context.t0;
+
+            case 35:
+              _context.prev = 35;
+              _context.prev = 36;
+
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+
+            case 38:
+              _context.prev = 38;
+
+              if (!_didIteratorError2) {
+                _context.next = 41;
+                break;
+              }
+
+              throw _iteratorError2;
+
+            case 41:
+              return _context.finish(38);
+
+            case 42:
+              return _context.finish(35);
+
+            case 43:
+
+              dataFilter[field] = previousResult;
+
+              if (!_this.schemas[field]) {
+                _context.next = 49;
+                break;
+              }
+
+              _context.next = 47;
+              return (0, _helper.initializeChildPromise)(field, _this.schemas[field].filter, dataFilter[field]);
+
+            case 47:
+              promiseResult = _context.sent;
+
+              dataFilter[field] = promiseResult.result;
+
+            case 49:
+              _iteratorNormalCompletion = true;
+              _context.next = 8;
+              break;
+
+            case 52:
+              _context.next = 58;
+              break;
+
+            case 54:
+              _context.prev = 54;
+              _context.t1 = _context['catch'](6);
+              _didIteratorError = true;
+              _iteratorError = _context.t1;
+
+            case 58:
+              _context.prev = 58;
+              _context.prev = 59;
+
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+              }
+
+            case 61:
+              _context.prev = 61;
+
+              if (!_didIteratorError) {
+                _context.next = 64;
+                break;
+              }
+
+              throw _iteratorError;
+
+            case 64:
+              return _context.finish(61);
+
+            case 65:
+              return _context.finish(58);
+
+            case 66:
+              _context.next = 71;
+              break;
+
+            case 68:
+              _context.prev = 68;
+              _context.t2 = _context['catch'](2);
+
+              mainErrors = _context.t2;
+
+            case 71:
+              return _context.abrupt('return', new Promise(function (resolve, reject) {
+                if (mainErrors) {
+                  reject(mainErrors);
+                } else {
+                  resolve(dataFilter);
+                }
+              }));
+
+            case 72:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, _this, [[2, 68], [6, 54, 58, 66], [16, 31, 35, 43], [36,, 38, 42], [59,, 61, 65]]);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+
+  this.validate = function () {
+    var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(data) {
+      var dataValidate, promises, mainErrors, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, field, validatorsByField, previousResult, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, validator, promiseResult;
+
+      return _regenerator2.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              dataValidate = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields);
+              promises = {};
+              mainErrors = null;
+              _context2.prev = 3;
+              _iteratorNormalCompletion3 = true;
+              _didIteratorError3 = false;
+              _iteratorError3 = undefined;
+              _context2.prev = 7;
+              _iterator3 = Object.keys(_this.fields)[Symbol.iterator]();
+
+            case 9:
+              if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {
+                _context2.next = 54;
+                break;
+              }
+
+              field = _step3.value;
               validatorsByField = (0, _helper.initializeFunctions)(_this.validators[field], _validators2.default, {
                 name: field,
                 type: _this.types[field],
@@ -109,12 +256,12 @@ var Schema = function Schema(fieldsSchema) {
               _iteratorNormalCompletion4 = true;
               _didIteratorError4 = false;
               _iteratorError4 = undefined;
-              _context.prev = 14;
+              _context2.prev = 16;
               _iterator4 = validatorsByField[Symbol.iterator]();
 
-            case 16:
+            case 18:
               if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
-                _context.next = 28;
+                _context2.next = 30;
                 break;
               }
 
@@ -124,140 +271,154 @@ var Schema = function Schema(fieldsSchema) {
                 promises[field] = [];
               }
               validator.data.previousResult = previousResult;
-              _context.next = 22;
+              _context2.next = 24;
               return (0, _helper.initializePromise)(field, validator);
 
-            case 22:
-              promiseResult = _context.sent;
+            case 24:
+              promiseResult = _context2.sent;
 
               previousResult = promiseResult.result;
               promises[field].push(promiseResult);
 
-            case 25:
+            case 27:
               _iteratorNormalCompletion4 = true;
-              _context.next = 16;
-              break;
-
-            case 28:
-              _context.next = 34;
+              _context2.next = 18;
               break;
 
             case 30:
-              _context.prev = 30;
-              _context.t0 = _context['catch'](14);
-              _didIteratorError4 = true;
-              _iteratorError4 = _context.t0;
+              _context2.next = 36;
+              break;
 
-            case 34:
-              _context.prev = 34;
-              _context.prev = 35;
+            case 32:
+              _context2.prev = 32;
+              _context2.t0 = _context2['catch'](16);
+              _didIteratorError4 = true;
+              _iteratorError4 = _context2.t0;
+
+            case 36:
+              _context2.prev = 36;
+              _context2.prev = 37;
 
               if (!_iteratorNormalCompletion4 && _iterator4.return) {
                 _iterator4.return();
               }
 
-            case 37:
-              _context.prev = 37;
+            case 39:
+              _context2.prev = 39;
 
               if (!_didIteratorError4) {
-                _context.next = 40;
+                _context2.next = 42;
                 break;
               }
 
               throw _iteratorError4;
 
-            case 40:
-              return _context.finish(37);
-
-            case 41:
-              return _context.finish(34);
-
             case 42:
+              return _context2.finish(39);
+
+            case 43:
+              return _context2.finish(36);
+
+            case 44:
               if (!_this.schemas[field]) {
-                _context.next = 49;
+                _context2.next = 51;
                 break;
               }
 
               if (typeof promises[field] === 'undefined') {
                 promises[field] = [];
               }
-              _context.t1 = promises[field];
-              _context.next = 47;
-              return (0, _helper.initializeChildPromise)(field, _this.schemas[field], dataValidate[field]);
-
-            case 47:
-              _context.t2 = _context.sent;
-
-              _context.t1.push.call(_context.t1, _context.t2);
+              _context2.t1 = promises[field];
+              _context2.next = 49;
+              return (0, _helper.initializeChildPromise)(field, _this.schemas[field].validate, dataValidate[field]);
 
             case 49:
-              _iteratorNormalCompletion2 = true;
-              _context.next = 7;
-              break;
+              _context2.t2 = _context2.sent;
 
-            case 52:
-              _context.next = 58;
+              _context2.t1.push.call(_context2.t1, _context2.t2);
+
+            case 51:
+              _iteratorNormalCompletion3 = true;
+              _context2.next = 9;
               break;
 
             case 54:
-              _context.prev = 54;
-              _context.t3 = _context['catch'](5);
-              _didIteratorError2 = true;
-              _iteratorError2 = _context.t3;
+              _context2.next = 60;
+              break;
 
-            case 58:
-              _context.prev = 58;
-              _context.prev = 59;
+            case 56:
+              _context2.prev = 56;
+              _context2.t3 = _context2['catch'](7);
+              _didIteratorError3 = true;
+              _iteratorError3 = _context2.t3;
 
-              if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
+            case 60:
+              _context2.prev = 60;
+              _context2.prev = 61;
+
+              if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
               }
 
-            case 61:
-              _context.prev = 61;
+            case 63:
+              _context2.prev = 63;
 
-              if (!_didIteratorError2) {
-                _context.next = 64;
+              if (!_didIteratorError3) {
+                _context2.next = 66;
                 break;
               }
 
-              throw _iteratorError2;
-
-            case 64:
-              return _context.finish(61);
-
-            case 65:
-              return _context.finish(58);
+              throw _iteratorError3;
 
             case 66:
-              return _context.abrupt('return', new Promise(function (resolve, reject) {
+              return _context2.finish(63);
+
+            case 67:
+              return _context2.finish(60);
+
+            case 68:
+              _context2.next = 73;
+              break;
+
+            case 70:
+              _context2.prev = 70;
+              _context2.t4 = _context2['catch'](3);
+
+              mainErrors = _context2.t4;
+
+            case 73:
+              return _context2.abrupt('return', new Promise(function (resolve, reject) {
+                if (mainErrors) {
+                  return reject(mainErrors);
+                }
+
                 var errors = {};
                 var data = {};
 
-                var _iteratorNormalCompletion3 = true;
-                var _didIteratorError3 = false;
-                var _iteratorError3 = undefined;
+                var _iteratorNormalCompletion5 = true;
+                var _didIteratorError5 = false;
+                var _iteratorError5 = undefined;
 
                 try {
-                  for (var _iterator3 = Object.keys(promises)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    var field = _step3.value;
+                  for (var _iterator5 = Object.keys(promises)[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var _field = _step5.value;
 
-                    var validatorsData = promises[field];
+                    var validatorsData = promises[_field];
 
                     errors = Object.assign(errors, (0, _helper.groupErrors)(validatorsData));
                     data = Object.assign(data, (0, _helper.getChildData)(dataValidate, validatorsData));
                   }
                 } catch (err) {
-                  _didIteratorError3 = true;
-                  _iteratorError3 = err;
+                  _didIteratorError5 = true;
+                  _iteratorError5 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                      _iterator3.return();
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                      _iterator5.return();
                     }
                   } finally {
-                    if (_didIteratorError3) {
-                      throw _iteratorError3;
+                    if (_didIteratorError5) {
+                      throw _iteratorError5;
                     }
                   }
                 }
@@ -269,16 +430,16 @@ var Schema = function Schema(fieldsSchema) {
                 }
               }));
 
-            case 67:
+            case 74:
             case 'end':
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee, _this, [[5, 54, 58, 66], [14, 30, 34, 42], [35,, 37, 41], [59,, 61, 65]]);
+      }, _callee2, _this, [[3, 70], [7, 56, 60, 68], [16, 32, 36, 44], [37,, 39, 43], [61,, 63, 67]]);
     }));
 
-    return function (_x) {
-      return _ref.apply(this, arguments);
+    return function (_x2) {
+      return _ref2.apply(this, arguments);
     };
   }();
 
@@ -381,48 +542,15 @@ var Schema = function Schema(fieldsSchema) {
     }
 
     if (validators) {
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
-
-      try {
-        for (var _iterator5 = validators[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var validator = _step5.value;
-
-          _this.validators[field].push(validator);
-        }
-      } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
-          }
-        } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
-          }
-        }
-      }
-    }
-
-    if (typeName === 'date') {
-      _this.filters[field] = [dateFN];
-    } else {
-      _this.filters[field] = [typeName];
-    }
-
-    if (filters) {
       var _iteratorNormalCompletion6 = true;
       var _didIteratorError6 = false;
       var _iteratorError6 = undefined;
 
       try {
-        for (var _iterator6 = filters[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-          var filter = _step6.value;
+        for (var _iterator6 = validators[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var validator = _step6.value;
 
-          _this.filters[field].push(filter);
+          _this.validators[field].push(validator);
         }
       } catch (err) {
         _didIteratorError6 = true;
@@ -439,9 +567,40 @@ var Schema = function Schema(fieldsSchema) {
         }
       }
     }
-  });
 
-  this.fields = this.filter(this.fields);
+    if (typeName === 'date') {
+      _this.filters[field] = [dateFN];
+    } else {
+      _this.filters[field] = [typeName];
+    }
+
+    if (filters) {
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
+
+      try {
+        for (var _iterator7 = filters[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var filter = _step7.value;
+
+          _this.filters[field].push(filter);
+        }
+      } catch (err) {
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
+          }
+        } finally {
+          if (_didIteratorError7) {
+            throw _iteratorError7;
+          }
+        }
+      }
+    }
+  });
 };
 
 module.exports = Schema;

@@ -42,7 +42,10 @@ const schemaJson = {
       schema: {
         firstName: {
           type: String,
-          required: true
+          required: true,
+          filters: [
+            'lowerCase'
+          ]
         },
         lastName: {
           type: String,
@@ -146,6 +149,23 @@ const schemaJsonDataReturn = {
     updatedAt: '2018-12-12',
     informations: {
         firstName: 'FirstName',
+        lastName: 'LastNname'
+    },
+    roles: [
+        'customer',
+        'admin'
+    ]
+}
+
+const schemaFilterJsonDataReturn = {
+    id: 123,
+    email: 'customer@test.test',
+    active: true,
+    type: 'active',
+    createdAt: new Date('2018-12-12 12:12:12'),
+    updatedAt: '2018-12-12',
+    informations: {
+        firstName: 'firstname',
         lastName: 'LastNname'
     },
     roles: [
@@ -401,18 +421,39 @@ describe('Schema', () => {
             "async Test Custom Error"
         ])
     })
+    
+    it('validator doesn\'t exist', async () => {
+        const SchemaData = new Schema(Object.assign({}, schemaJson, {
+            id: {
+                type: Number,
+                defaultValue: null,
+                required: true,
+                validators: [
+                    'test'
+                ]
+            }
+        }))
+        let SchemaDataValidate = null
+        try {
+            SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData))
+        } catch (e) {
+            SchemaDataValidate = e.message
+        }
+        
+        expect(SchemaDataValidate).to.eql("Doesn\'t exist \'test\'")
+    })
   })
 
   describe('Filter', () => {
     it('filter has to return correct data types', async () => {
         const SchemaData = new Schema(schemaJson)
-        const SchemaDataFiltered = SchemaData.filter(Object.assign({}, schemaJsonData, {
+        const SchemaDataFiltered = await SchemaData.filter(Object.assign({}, schemaJsonData, {
             id: '123',
             active: 1,
             createdAt: '2018-12-12 12:12:12'
         }))
         
-        expect(SchemaDataFiltered).to.eql(schemaJsonDataReturn)
+        expect(SchemaDataFiltered).to.eql(schemaFilterJsonDataReturn)
     })
     
     it('custom filter', async () => {
@@ -422,7 +463,7 @@ describe('Schema', () => {
                 defaultValue: null,
                 required: true,
                 filters: [
-                    ({value}) => {
+                    async ({value}) => {
                         return value + 1000
                     },
                     {
@@ -436,9 +477,9 @@ describe('Schema', () => {
                 ]
             }
         }))
-        const SchemaDataFiltered = SchemaData.filter(schemaJsonData)
+        const SchemaDataFiltered = await SchemaData.filter(schemaJsonData)
         
-        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonDataReturn, {
+        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaFilterJsonDataReturn, {
             id: 1223
         }))
     })
@@ -454,11 +495,11 @@ describe('Schema', () => {
                 ]
             },
         }))
-        const SchemaDataFiltered = SchemaData.filter(Object.assign({}, schemaJsonData, {
+        const SchemaDataFiltered = await SchemaData.filter(Object.assign({}, schemaJsonData, {
             email: '  customer@test.test   ',
         }))
         
-        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonDataReturn, {
+        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaFilterJsonDataReturn, {
             email: 'customer@test.test'
         }))
     })
@@ -474,11 +515,11 @@ describe('Schema', () => {
                 ]
             },
         }))
-        const SchemaDataFiltered = SchemaData.filter(Object.assign({}, schemaJsonData, {
+        const SchemaDataFiltered = await SchemaData.filter(Object.assign({}, schemaJsonData, {
             email: 'Test@Test',
         }))
         
-        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonDataReturn, {
+        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaFilterJsonDataReturn, {
             email: 'test@test'
         }))
     })
@@ -494,36 +535,35 @@ describe('Schema', () => {
                 ]
             },
         }))
-        const SchemaDataFiltered = SchemaData.filter(Object.assign({}, schemaJsonData, {
+        const SchemaDataFiltered = await SchemaData.filter(Object.assign({}, schemaJsonData, {
             email: 'Test@Test',
         }))
         
-        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaJsonDataReturn, {
+        expect(SchemaDataFiltered).to.eql(Object.assign({}, schemaFilterJsonDataReturn, {
             email: 'TEST@TEST'
         }))
     })
 
     it('filter doesn\'t exist', async () => {
+        const SchemaData = new Schema(Object.assign({}, schemaJson, {
+            email: {
+                type: String,
+                defaultValue: null,
+                required: true,
+                filters: [
+                    'test'
+                ]
+            },
+        }))
         
-
         let SchemaDataFiltered = null
         try {
-            const SchemaData = new Schema(Object.assign({}, schemaJson, {
-                email: {
-                    type: String,
-                    defaultValue: null,
-                    required: true,
-                    filters: [
-                        'test'
-                    ]
-                },
-            }))
-            SchemaDataFiltered = SchemaData.filter(schemaJsonData)
+            SchemaDataFiltered = await SchemaData.filter(schemaJsonData)
         } catch (e) {
             SchemaDataFiltered = e.message
         }
         
-        expect(SchemaDataFiltered).to.eql("Doesn't exist 'test'")
+        expect(SchemaDataFiltered).to.eql("Doesn\'t exist \'test\'")
     })
   })
 
