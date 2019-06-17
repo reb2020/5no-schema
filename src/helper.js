@@ -145,12 +145,22 @@ const filterDataByFields = (data, fields) => {
   return returnData
 }
 
+const prefilledDataByFields = (data, fields) => {
+  let returnData = {}
+  for (let field of Object.keys(fields)) {
+    returnData[field] = typeof data[field] !== 'undefined' ? data[field] : fields[field]
+  }
+
+  return returnData
+}
+
 module.exports = {
   clone,
   groupErrors,
   getTypeOfValue,
   getTypeName,
   filterDataByFields,
+  prefilledDataByFields,
   initializeFunctions,
   initializeChildPromise,
   isDateValid,

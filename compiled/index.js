@@ -27,6 +27,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Schema = function Schema(fieldsSchema) {
   var _this = this;
 
+  var prefilledSchema = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   (0, _classCallCheck3.default)(this, Schema);
 
   this.filter = function () {
@@ -38,17 +39,21 @@ var Schema = function Schema(fieldsSchema) {
           switch (_context.prev = _context.next) {
             case 0:
               dataFilter = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields);
+
+              if (_this.prefilledSchema) {
+                dataFilter = (0, _helper.prefilledDataByFields)((0, _helper.clone)(data), _this.fields);
+              }
               mainErrors = null;
-              _context.prev = 2;
+              _context.prev = 3;
               _iteratorNormalCompletion = true;
               _didIteratorError = false;
               _iteratorError = undefined;
-              _context.prev = 6;
+              _context.prev = 7;
               _iterator = Object.keys(_this.fields)[Symbol.iterator]();
 
-            case 8:
+            case 9:
               if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                _context.next = 52;
+                _context.next = 53;
                 break;
               }
 
@@ -63,7 +68,7 @@ var Schema = function Schema(fieldsSchema) {
               });
 
               if (!(typeof dataFilter[field] !== 'undefined' && dataFilter[field] !== _this.fields[field])) {
-                _context.next = 49;
+                _context.next = 50;
                 break;
               }
 
@@ -71,12 +76,12 @@ var Schema = function Schema(fieldsSchema) {
               _iteratorNormalCompletion2 = true;
               _didIteratorError2 = false;
               _iteratorError2 = undefined;
-              _context.prev = 16;
+              _context.prev = 17;
               _iterator2 = filtersByField[Symbol.iterator]();
 
-            case 18:
+            case 19:
               if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-                _context.next = 29;
+                _context.next = 30;
                 break;
               }
 
@@ -84,120 +89,120 @@ var Schema = function Schema(fieldsSchema) {
 
               filter.data.previousResult = previousResult;
               filter.data.value = previousResult;
-              _context.next = 24;
+              _context.next = 25;
               return (0, _helper.initializePromise)(field, filter);
 
-            case 24:
+            case 25:
               _promiseResult = _context.sent;
 
               previousResult = _promiseResult.result;
 
-            case 26:
+            case 27:
               _iteratorNormalCompletion2 = true;
-              _context.next = 18;
+              _context.next = 19;
               break;
 
-            case 29:
-              _context.next = 35;
+            case 30:
+              _context.next = 36;
               break;
 
-            case 31:
-              _context.prev = 31;
-              _context.t0 = _context['catch'](16);
+            case 32:
+              _context.prev = 32;
+              _context.t0 = _context['catch'](17);
               _didIteratorError2 = true;
               _iteratorError2 = _context.t0;
 
-            case 35:
-              _context.prev = 35;
+            case 36:
               _context.prev = 36;
+              _context.prev = 37;
 
               if (!_iteratorNormalCompletion2 && _iterator2.return) {
                 _iterator2.return();
               }
 
-            case 38:
-              _context.prev = 38;
+            case 39:
+              _context.prev = 39;
 
               if (!_didIteratorError2) {
-                _context.next = 41;
+                _context.next = 42;
                 break;
               }
 
               throw _iteratorError2;
 
-            case 41:
-              return _context.finish(38);
-
             case 42:
-              return _context.finish(35);
+              return _context.finish(39);
 
             case 43:
+              return _context.finish(36);
+
+            case 44:
 
               dataFilter[field] = previousResult;
 
               if (!_this.schemas[field]) {
-                _context.next = 49;
+                _context.next = 50;
                 break;
               }
 
-              _context.next = 47;
+              _context.next = 48;
               return (0, _helper.initializeChildPromise)(field, _this.schemas[field].filter, dataFilter[field]);
 
-            case 47:
+            case 48:
               promiseResult = _context.sent;
 
               dataFilter[field] = promiseResult.result;
 
-            case 49:
+            case 50:
               _iteratorNormalCompletion = true;
-              _context.next = 8;
+              _context.next = 9;
               break;
 
-            case 52:
-              _context.next = 58;
+            case 53:
+              _context.next = 59;
               break;
 
-            case 54:
-              _context.prev = 54;
-              _context.t1 = _context['catch'](6);
+            case 55:
+              _context.prev = 55;
+              _context.t1 = _context['catch'](7);
               _didIteratorError = true;
               _iteratorError = _context.t1;
 
-            case 58:
-              _context.prev = 58;
+            case 59:
               _context.prev = 59;
+              _context.prev = 60;
 
               if (!_iteratorNormalCompletion && _iterator.return) {
                 _iterator.return();
               }
 
-            case 61:
-              _context.prev = 61;
+            case 62:
+              _context.prev = 62;
 
               if (!_didIteratorError) {
-                _context.next = 64;
+                _context.next = 65;
                 break;
               }
 
               throw _iteratorError;
 
-            case 64:
-              return _context.finish(61);
-
             case 65:
-              return _context.finish(58);
+              return _context.finish(62);
 
             case 66:
-              _context.next = 71;
+              return _context.finish(59);
+
+            case 67:
+              _context.next = 72;
               break;
 
-            case 68:
-              _context.prev = 68;
-              _context.t2 = _context['catch'](2);
+            case 69:
+              _context.prev = 69;
+              _context.t2 = _context['catch'](3);
 
               mainErrors = _context.t2;
 
-            case 71:
+            case 72:
               return _context.abrupt('return', new Promise(function (resolve, reject) {
                 if (mainErrors) {
                   reject(mainErrors);
@@ -206,15 +211,15 @@ var Schema = function Schema(fieldsSchema) {
                 }
               }));
 
-            case 72:
+            case 73:
             case 'end':
               return _context.stop();
           }
         }
-      }, _callee, _this, [[2, 68], [6, 54, 58, 66], [16, 31, 35, 43], [36,, 38, 42], [59,, 61, 65]]);
+      }, _callee, _this, [[3, 69], [7, 55, 59, 67], [17, 32, 36, 44], [37,, 39, 43], [60,, 62, 66]]);
     }));
 
-    return function (_x) {
+    return function (_x2) {
       return _ref.apply(this, arguments);
     };
   }();
@@ -228,18 +233,22 @@ var Schema = function Schema(fieldsSchema) {
           switch (_context2.prev = _context2.next) {
             case 0:
               dataValidate = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields);
+
+              if (_this.prefilledSchema) {
+                dataValidate = (0, _helper.prefilledDataByFields)((0, _helper.clone)(data), _this.fields);
+              }
               promises = {};
               mainErrors = null;
-              _context2.prev = 3;
+              _context2.prev = 4;
               _iteratorNormalCompletion3 = true;
               _didIteratorError3 = false;
               _iteratorError3 = undefined;
-              _context2.prev = 7;
+              _context2.prev = 8;
               _iterator3 = Object.keys(_this.fields)[Symbol.iterator]();
 
-            case 9:
+            case 10:
               if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {
-                _context2.next = 54;
+                _context2.next = 55;
                 break;
               }
 
@@ -256,12 +265,12 @@ var Schema = function Schema(fieldsSchema) {
               _iteratorNormalCompletion4 = true;
               _didIteratorError4 = false;
               _iteratorError4 = undefined;
-              _context2.prev = 16;
+              _context2.prev = 17;
               _iterator4 = validatorsByField[Symbol.iterator]();
 
-            case 18:
+            case 19:
               if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
-                _context2.next = 30;
+                _context2.next = 31;
                 break;
               }
 
@@ -271,57 +280,57 @@ var Schema = function Schema(fieldsSchema) {
                 promises[field] = [];
               }
               validator.data.previousResult = previousResult;
-              _context2.next = 24;
+              _context2.next = 25;
               return (0, _helper.initializePromise)(field, validator);
 
-            case 24:
+            case 25:
               promiseResult = _context2.sent;
 
               previousResult = promiseResult.result;
               promises[field].push(promiseResult);
 
-            case 27:
+            case 28:
               _iteratorNormalCompletion4 = true;
-              _context2.next = 18;
+              _context2.next = 19;
               break;
 
-            case 30:
-              _context2.next = 36;
+            case 31:
+              _context2.next = 37;
               break;
 
-            case 32:
-              _context2.prev = 32;
-              _context2.t0 = _context2['catch'](16);
+            case 33:
+              _context2.prev = 33;
+              _context2.t0 = _context2['catch'](17);
               _didIteratorError4 = true;
               _iteratorError4 = _context2.t0;
 
-            case 36:
-              _context2.prev = 36;
+            case 37:
               _context2.prev = 37;
+              _context2.prev = 38;
 
               if (!_iteratorNormalCompletion4 && _iterator4.return) {
                 _iterator4.return();
               }
 
-            case 39:
-              _context2.prev = 39;
+            case 40:
+              _context2.prev = 40;
 
               if (!_didIteratorError4) {
-                _context2.next = 42;
+                _context2.next = 43;
                 break;
               }
 
               throw _iteratorError4;
 
-            case 42:
-              return _context2.finish(39);
-
             case 43:
-              return _context2.finish(36);
+              return _context2.finish(40);
 
             case 44:
+              return _context2.finish(37);
+
+            case 45:
               if (!_this.schemas[field]) {
-                _context2.next = 51;
+                _context2.next = 52;
                 break;
               }
 
@@ -329,64 +338,64 @@ var Schema = function Schema(fieldsSchema) {
                 promises[field] = [];
               }
               _context2.t1 = promises[field];
-              _context2.next = 49;
+              _context2.next = 50;
               return (0, _helper.initializeChildPromise)(field, _this.schemas[field].validate, dataValidate[field]);
 
-            case 49:
+            case 50:
               _context2.t2 = _context2.sent;
 
               _context2.t1.push.call(_context2.t1, _context2.t2);
 
-            case 51:
+            case 52:
               _iteratorNormalCompletion3 = true;
-              _context2.next = 9;
+              _context2.next = 10;
               break;
 
-            case 54:
-              _context2.next = 60;
+            case 55:
+              _context2.next = 61;
               break;
 
-            case 56:
-              _context2.prev = 56;
-              _context2.t3 = _context2['catch'](7);
+            case 57:
+              _context2.prev = 57;
+              _context2.t3 = _context2['catch'](8);
               _didIteratorError3 = true;
               _iteratorError3 = _context2.t3;
 
-            case 60:
-              _context2.prev = 60;
+            case 61:
               _context2.prev = 61;
+              _context2.prev = 62;
 
               if (!_iteratorNormalCompletion3 && _iterator3.return) {
                 _iterator3.return();
               }
 
-            case 63:
-              _context2.prev = 63;
+            case 64:
+              _context2.prev = 64;
 
               if (!_didIteratorError3) {
-                _context2.next = 66;
+                _context2.next = 67;
                 break;
               }
 
               throw _iteratorError3;
 
-            case 66:
-              return _context2.finish(63);
-
             case 67:
-              return _context2.finish(60);
+              return _context2.finish(64);
 
             case 68:
-              _context2.next = 73;
+              return _context2.finish(61);
+
+            case 69:
+              _context2.next = 74;
               break;
 
-            case 70:
-              _context2.prev = 70;
-              _context2.t4 = _context2['catch'](3);
+            case 71:
+              _context2.prev = 71;
+              _context2.t4 = _context2['catch'](4);
 
               mainErrors = _context2.t4;
 
-            case 73:
+            case 74:
               return _context2.abrupt('return', new Promise(function (resolve, reject) {
                 if (mainErrors) {
                   return reject(mainErrors);
@@ -430,15 +439,15 @@ var Schema = function Schema(fieldsSchema) {
                 }
               }));
 
-            case 74:
+            case 75:
             case 'end':
               return _context2.stop();
           }
         }
-      }, _callee2, _this, [[3, 70], [7, 56, 60, 68], [16, 32, 36, 44], [37,, 39, 43], [61,, 63, 67]]);
+      }, _callee2, _this, [[4, 71], [8, 57, 61, 69], [17, 33, 37, 45], [38,, 40, 44], [62,, 64, 68]]);
     }));
 
-    return function (_x2) {
+    return function (_x3) {
       return _ref2.apply(this, arguments);
     };
   }();
@@ -485,6 +494,7 @@ var Schema = function Schema(fieldsSchema) {
   this.schemas = {};
   this.allowedValues = {};
   this.isChild = false;
+  this.prefilledSchema = prefilledSchema;
 
   Object.keys(fieldsSchema).forEach(function (field) {
     var _fieldsSchema$field = fieldsSchema[field],

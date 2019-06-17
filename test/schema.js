@@ -157,6 +157,40 @@ const schemaJsonDataReturn = {
     ]
 }
 
+const schemaPrefilledJsonData = {
+    id: 123,
+    email: 'customer@test.test',
+    type: 'active',
+    createdAt: new Date('2018-12-12 12:12:12'),
+    updatedAt: '2018-12-12',
+    informations: {
+        firstName: 'FirstName',
+        lastName: 'LastNname'
+    },
+    roles: [
+        'customer',
+        'admin'
+    ]
+}
+
+const schemaPrefilledDataReturn = {
+    id: 123,
+    email: 'customer@test.test',
+    active: false,
+    type: 'active',
+    createdAt: new Date('2018-12-12 12:12:12'),
+    updatedAt: '2018-12-12',
+    address: null,
+    informations: {
+        firstName: 'firstname',
+        lastName: 'LastNname'
+    },
+    roles: [
+        'customer',
+        'admin'
+    ]
+}
+
 const schemaFilterJsonDataReturn = {
     id: 123,
     email: 'customer@test.test',
@@ -581,6 +615,20 @@ describe('Schema', () => {
         }
         
         expect(SchemaDataFiltered).to.eql("Doesn\'t exist \'test\'")
+    })
+  })
+
+  describe('Prefilled', () => {
+    it('return prefilled data', async () => {
+        const SchemaData = new Schema(schemaJson, true)
+        let SchemaDataFiltered = null
+        try {
+            SchemaDataFiltered = await SchemaData.filter(schemaPrefilledJsonData)
+        } catch (e) {
+            SchemaDataFiltered = e.message
+        }
+        
+        expect(SchemaDataFiltered).to.eql(schemaPrefilledDataReturn)
     })
   })
 

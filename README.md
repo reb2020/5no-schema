@@ -158,7 +158,7 @@ const schemaJsonData = {
     status: 'active'
 }
 
-const SchemaData = new Schema(schemaJson)
+const SchemaData = new Schema(schemaJson, false) // prefilledSchema - prefill object by default values of schema
 
 const SchemaDataFiltered = await SchemaData.filter(schemaJsonData)
 
@@ -198,6 +198,42 @@ SchemaData.validate(SchemaDataFiltered).then(function(data) {
         }
     })
 })
+
+
+//prefilledSchema = true
+const schemaJsonData = {
+    id: 123,
+    email: 'test@test.test',
+    createdAt: '2018-12-12 12:12:12',
+    updatedAt: '2018-12-12 12:12:12',
+    informations: {
+        firstName: 'FirstName',
+        lastName: 'LastNname'
+    },
+    roles: [
+      'customer',
+      'admin'
+    ],
+    status: 'active'
+}
+
+const SchemaData = new Schema(schemaJson, true) // prefilledSchema - prefill object by default values of schema
+
+const SchemaDataFiltered = await SchemaData.filter(schemaJsonData)
+
+/*
+{ 
+  id: 1223,
+  email: 'test@test.test',
+  active: false,
+  createdAt: 2018-12-12T10:12:12.000Z,
+  updatedAt: '2018-12-12',
+  address: null,
+  informations: { firstName: 'FirstName', lastName: 'LastNname' },
+  roles: [ 'customer', 'admin' ],
+  status: 'active'
+}
+*/
 
 
 const SchemaDataJsonOptions = SchemaData.json()

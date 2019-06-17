@@ -246,12 +246,43 @@ var filterDataByFields = function filterDataByFields(data, fields) {
   return returnData;
 };
 
+var prefilledDataByFields = function prefilledDataByFields(data, fields) {
+  var returnData = {};
+  var _iteratorNormalCompletion5 = true;
+  var _didIteratorError5 = false;
+  var _iteratorError5 = undefined;
+
+  try {
+    for (var _iterator5 = Object.keys(fields)[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+      var field = _step5.value;
+
+      returnData[field] = typeof data[field] !== 'undefined' ? data[field] : fields[field];
+    }
+  } catch (err) {
+    _didIteratorError5 = true;
+    _iteratorError5 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion5 && _iterator5.return) {
+        _iterator5.return();
+      }
+    } finally {
+      if (_didIteratorError5) {
+        throw _iteratorError5;
+      }
+    }
+  }
+
+  return returnData;
+};
+
 module.exports = {
   clone: clone,
   groupErrors: groupErrors,
   getTypeOfValue: getTypeOfValue,
   getTypeName: getTypeName,
   filterDataByFields: filterDataByFields,
+  prefilledDataByFields: prefilledDataByFields,
   initializeFunctions: initializeFunctions,
   initializeChildPromise: initializeChildPromise,
   isDateValid: isDateValid,

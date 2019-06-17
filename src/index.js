@@ -1,9 +1,9 @@
 import Filters from './filters'
 import Validators from './validators'
-import { clone, groupErrors, initializePromise, getTypeName, initializeFunctions, initializeChildPromise, filterDataByFields, getChildData } from './helper'
+import { clone, groupErrors, initializePromise, getTypeName, initializeFunctions, initializeChildPromise, filterDataByFields, prefilledDataByFields, getChildData } from './helper'
 
 class Schema {
-  constructor(fieldsSchema) {
+  constructor(fieldsSchema, prefilledSchema = false) {
     let allowTypes = [
       'string',
       'number',
@@ -22,6 +22,7 @@ class Schema {
     this.schemas = {}
     this.allowedValues = {}
     this.isChild = false
+    this.prefilledSchema = prefilledSchema
 
     Object.keys(fieldsSchema).forEach((field) => {
       const { type, defaultValue, allowedValues, required, validators, filters, format, schema } = fieldsSchema[field]
@@ -91,6 +92,9 @@ class Schema {
 
   filter = async(data) => {
     let dataFilter = filterDataByFields(clone(data), this.fields)
+    if (this.prefilledSchema) {
+      dataFilter = prefilledDataByFields(clone(data), this.fields)
+    }
     let mainErrors = null
 
     try {
@@ -136,6 +140,9 @@ class Schema {
 
   validate = async(data) => {
     let dataValidate = filterDataByFields(clone(data), this.fields)
+    if (this.prefilledSchema) {
+      dataValidate = prefilledDataByFields(clone(data), this.fields)
+    }
     let promises = {}
     let mainErrors = null
 
