@@ -27,6 +27,7 @@ const schemaJson = {
     },
     active: {
       type: Boolean,
+      prefilled: true,
       defaultValue: false
     },
     createdAt: {
@@ -181,6 +182,23 @@ const schemaPrefilledDataReturn = {
     createdAt: new Date('2018-12-12 12:12:12'),
     updatedAt: '2018-12-12',
     address: null,
+    informations: {
+        firstName: 'firstname',
+        lastName: 'LastNname'
+    },
+    roles: [
+        'customer',
+        'admin'
+    ]
+}
+
+const schemaPrefilledDataReturnOne = {
+    id: 123,
+    email: 'customer@test.test',
+    active: false,
+    type: 'active',
+    createdAt: new Date('2018-12-12 12:12:12'),
+    updatedAt: '2018-12-12',
     informations: {
         firstName: 'firstname',
         lastName: 'LastNname'
@@ -629,6 +647,18 @@ describe('Schema', () => {
         }
         
         expect(SchemaDataFiltered).to.eql(schemaPrefilledDataReturn)
+    })
+
+    it('return prefilled data for one field', async () => {
+        const SchemaData = new Schema(schemaJson)
+        let SchemaDataFiltered = null
+        try {
+            SchemaDataFiltered = await SchemaData.filter(schemaPrefilledJsonData)
+        } catch (e) {
+            SchemaDataFiltered = e.message
+        }
+        
+        expect(SchemaDataFiltered).to.eql(schemaPrefilledDataReturnOne)
     })
   })
 

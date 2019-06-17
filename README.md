@@ -17,6 +17,7 @@ const schemaJson = {
     [name]: {
       type: Number, // Number, String, Boolean, Date, Array, Object
       schema: {}, // Can describe object schema
+      prefilled: false, // This value is optionally, indicate filling or not by default field
       defaultValue: null, // This value is optionally
       format: 'YYYY-MM-DD HH:mm:ss', // This value only for Date type
       required: true, // true or false
@@ -99,6 +100,7 @@ const schemaJson = {
     },
     active: {
       type: Boolean,
+      prefilled: true,
       defaultValue: false
     },
     createdAt: {

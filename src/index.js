@@ -14,6 +14,7 @@ class Schema {
     ]
 
     this.fields = {}
+    this.prefilled = {}
     this.validators = {}
     this.filters = {}
     this.types = {}
@@ -25,7 +26,7 @@ class Schema {
     this.prefilledSchema = prefilledSchema
 
     Object.keys(fieldsSchema).forEach((field) => {
-      const { type, defaultValue, allowedValues, required, validators, filters, format, schema } = fieldsSchema[field]
+      const { type, prefilled, defaultValue, allowedValues, required, validators, filters, format, schema } = fieldsSchema[field]
       const typeName = getTypeName(type)
 
       if (!allowTypes.includes(typeName)) {
@@ -33,6 +34,7 @@ class Schema {
       }
 
       this.fields[field] = defaultValue
+      this.prefilled[field] = prefilled || false
       this.types[field] = type
 
       this.validators[field] = ['type']
@@ -91,7 +93,7 @@ class Schema {
   }
 
   filter = async(data) => {
-    let dataFilter = filterDataByFields(clone(data), this.fields)
+    let dataFilter = filterDataByFields(clone(data), this.fields, this.prefilled)
     if (this.prefilledSchema) {
       dataFilter = prefilledDataByFields(clone(data), this.fields)
     }
@@ -139,7 +141,7 @@ class Schema {
   }
 
   validate = async(data) => {
-    let dataValidate = filterDataByFields(clone(data), this.fields)
+    let dataValidate = filterDataByFields(clone(data), this.fields, this.prefilled)
     if (this.prefilledSchema) {
       dataValidate = prefilledDataByFields(clone(data), this.fields)
     }

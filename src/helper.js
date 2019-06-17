@@ -133,9 +133,16 @@ const initializeFunctions = (functionsData, functionsList, functionArguments) =>
   return initializeFunctionsData
 }
 
-const filterDataByFields = (data, fields) => {
+const filterDataByFields = (data, fields, prefilled) => {
   let returnData = {}
   const allowFields = Object.keys(fields)
+
+  for (let field of Object.keys(prefilled)) {
+    if (prefilled[field] === true) {
+      returnData[field] = fields[field]
+    }
+  }
+
   for (let field of Object.keys(data)) {
     if (allowFields.includes(field)) {
       returnData[field] = data[field]

@@ -213,19 +213,20 @@ var initializeFunctions = function initializeFunctions(functionsData, functionsL
   return initializeFunctionsData;
 };
 
-var filterDataByFields = function filterDataByFields(data, fields) {
+var filterDataByFields = function filterDataByFields(data, fields, prefilled) {
   var returnData = {};
   var allowFields = Object.keys(fields);
+
   var _iteratorNormalCompletion4 = true;
   var _didIteratorError4 = false;
   var _iteratorError4 = undefined;
 
   try {
-    for (var _iterator4 = Object.keys(data)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+    for (var _iterator4 = Object.keys(prefilled)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
       var field = _step4.value;
 
-      if (allowFields.includes(field)) {
-        returnData[field] = data[field];
+      if (prefilled[field] === true) {
+        returnData[field] = fields[field];
       }
     }
   } catch (err) {
@@ -243,20 +244,17 @@ var filterDataByFields = function filterDataByFields(data, fields) {
     }
   }
 
-  return returnData;
-};
-
-var prefilledDataByFields = function prefilledDataByFields(data, fields) {
-  var returnData = {};
   var _iteratorNormalCompletion5 = true;
   var _didIteratorError5 = false;
   var _iteratorError5 = undefined;
 
   try {
-    for (var _iterator5 = Object.keys(fields)[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-      var field = _step5.value;
+    for (var _iterator5 = Object.keys(data)[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+      var _field = _step5.value;
 
-      returnData[field] = typeof data[field] !== 'undefined' ? data[field] : fields[field];
+      if (allowFields.includes(_field)) {
+        returnData[_field] = data[_field];
+      }
     }
   } catch (err) {
     _didIteratorError5 = true;
@@ -269,6 +267,36 @@ var prefilledDataByFields = function prefilledDataByFields(data, fields) {
     } finally {
       if (_didIteratorError5) {
         throw _iteratorError5;
+      }
+    }
+  }
+
+  return returnData;
+};
+
+var prefilledDataByFields = function prefilledDataByFields(data, fields) {
+  var returnData = {};
+  var _iteratorNormalCompletion6 = true;
+  var _didIteratorError6 = false;
+  var _iteratorError6 = undefined;
+
+  try {
+    for (var _iterator6 = Object.keys(fields)[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+      var field = _step6.value;
+
+      returnData[field] = typeof data[field] !== 'undefined' ? data[field] : fields[field];
+    }
+  } catch (err) {
+    _didIteratorError6 = true;
+    _iteratorError6 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion6 && _iterator6.return) {
+        _iterator6.return();
+      }
+    } finally {
+      if (_didIteratorError6) {
+        throw _iteratorError6;
       }
     }
   }

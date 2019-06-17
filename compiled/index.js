@@ -38,7 +38,7 @@ var Schema = function Schema(fieldsSchema) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              dataFilter = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields);
+              dataFilter = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields, _this.prefilled);
 
               if (_this.prefilledSchema) {
                 dataFilter = (0, _helper.prefilledDataByFields)((0, _helper.clone)(data), _this.fields);
@@ -232,7 +232,7 @@ var Schema = function Schema(fieldsSchema) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              dataValidate = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields);
+              dataValidate = (0, _helper.filterDataByFields)((0, _helper.clone)(data), _this.fields, _this.prefilled);
 
               if (_this.prefilledSchema) {
                 dataValidate = (0, _helper.prefilledDataByFields)((0, _helper.clone)(data), _this.fields);
@@ -486,6 +486,7 @@ var Schema = function Schema(fieldsSchema) {
   var allowTypes = ['string', 'number', 'boolean', 'object', 'array', 'date'];
 
   this.fields = {};
+  this.prefilled = {};
   this.validators = {};
   this.filters = {};
   this.types = {};
@@ -499,6 +500,7 @@ var Schema = function Schema(fieldsSchema) {
   Object.keys(fieldsSchema).forEach(function (field) {
     var _fieldsSchema$field = fieldsSchema[field],
         type = _fieldsSchema$field.type,
+        prefilled = _fieldsSchema$field.prefilled,
         defaultValue = _fieldsSchema$field.defaultValue,
         allowedValues = _fieldsSchema$field.allowedValues,
         required = _fieldsSchema$field.required,
@@ -514,6 +516,7 @@ var Schema = function Schema(fieldsSchema) {
     }
 
     _this.fields[field] = defaultValue;
+    _this.prefilled[field] = prefilled || false;
     _this.types[field] = type;
 
     _this.validators[field] = ['type'];
