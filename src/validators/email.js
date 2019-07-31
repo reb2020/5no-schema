@@ -1,9 +1,9 @@
-import { getTypeOfValue } from '../helper'
+import { getTypeOfValue, isEqual } from '../helper'
 
 export default function({name, value, defaultValue}) {
   if (typeof value !== 'undefined' &&
         getTypeOfValue(value) === 'string' &&
-        value !== defaultValue
+        !isEqual(value, defaultValue)
   ) {
     if (
       value.length < 254 &&

@@ -17,7 +17,7 @@ exports.default = function (_ref) {
     return true;
   }
 
-  if (typeof value !== 'undefined' && value !== defaultValue && typeOfValue !== typeName) {
+  if (typeof value !== 'undefined' && !(0, _helper.isEqual)(value, defaultValue) && typeOfValue !== typeName) {
     return name + ' has incorrect type';
   }
 

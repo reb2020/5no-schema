@@ -95,7 +95,7 @@ var getTypeOfValue = function getTypeOfValue(value) {
   return typeOfValue;
 };
 
-var getChildData = function getChildData(allData, result) {
+var getChildData = function getChildData(types, allData, result) {
   var _iteratorNormalCompletion2 = true;
   var _didIteratorError2 = false;
   var _iteratorError2 = undefined;
@@ -105,7 +105,11 @@ var getChildData = function getChildData(allData, result) {
       var data = _step2.value;
 
       if (data.child === true) {
-        allData[data.field] = data.result;
+        if (getTypeName(types[data.field]) === 'array') {
+          allData[data.field].push(data.result);
+        } else {
+          allData[data.field] = data.result;
+        }
       }
     }
   } catch (err) {
@@ -304,8 +308,43 @@ var prefilledDataByFields = function prefilledDataByFields(data, fields) {
   return returnData;
 };
 
+var isEqual = function isEqual(a, b) {
+  var typeOfValueA = getTypeOfValue(a);
+  var typeOfValueB = getTypeOfValue(b);
+
+  if (typeOfValueA === typeOfValueB && typeOfValueA === 'object') {
+    var aProps = Object.getOwnPropertyNames(a);
+    var bProps = Object.getOwnPropertyNames(b);
+
+    if (aProps.length != bProps.length) {
+      return false;
+    }
+
+    for (var i = 0; i < aProps.length; i++) {
+      var propName = aProps[i];
+
+      if (a[propName] !== b[propName]) {
+        return false;
+      }
+    }
+
+    return true;
+  } else if (typeOfValueA === typeOfValueB && typeOfValueA === 'array') {
+    if (a.length != b.length) {
+      return false;
+    }
+
+    return true;
+  } else if (typeOfValueA === typeOfValueB && a === b) {
+    return true;
+  }
+
+  return false;
+};
+
 module.exports = {
   clone: clone,
+  isEqual: isEqual,
   groupErrors: groupErrors,
   getTypeOfValue: getTypeOfValue,
   getTypeName: getTypeName,

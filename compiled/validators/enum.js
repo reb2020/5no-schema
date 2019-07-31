@@ -10,9 +10,11 @@ exports.default = function (_ref) {
       options = _ref.options,
       defaultValue = _ref.defaultValue;
 
-  if (typeof value !== 'undefined' && value !== defaultValue && !options.allowedValues.includes(value)) {
+  if (typeof value !== 'undefined' && !(0, _helper.isEqual)(value, defaultValue) && !options.allowedValues.includes(value)) {
     return name + ' should be equal to one of the allowed values';
   }
 
   return true;
 };
+
+var _helper = require('../helper');

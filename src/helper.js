@@ -55,10 +55,14 @@ const getTypeOfValue = (value) => {
   return typeOfValue
 }
 
-const getChildData = (allData, result) => {
+const getChildData = (types, allData, result) => {
   for (let data of result) {
     if (data.child === true) {
-      allData[data.field] = data.result
+      if (getTypeName(types[data.field]) === 'array') {
+        allData[data.field].push(data.result)
+      } else {
+        allData[data.field] = data.result
+      }
     }
   }
   return allData
@@ -161,8 +165,43 @@ const prefilledDataByFields = (data, fields) => {
   return returnData
 }
 
+const isEqual = (a, b) => {
+  const typeOfValueA = getTypeOfValue(a)
+  const typeOfValueB = getTypeOfValue(b)
+
+  if (typeOfValueA === typeOfValueB && typeOfValueA === 'object') {
+    let aProps = Object.getOwnPropertyNames(a)
+    let bProps = Object.getOwnPropertyNames(b)
+
+    if (aProps.length != bProps.length) {
+      return false
+    }
+
+    for (let i = 0; i < aProps.length; i++) {
+      let propName = aProps[i]
+
+      if (a[propName] !== b[propName]) {
+        return false
+      }
+    }
+
+    return true
+  } else if (typeOfValueA === typeOfValueB && typeOfValueA === 'array') {
+    if (a.length != b.length) {
+      return false
+    }
+
+    return true
+  } else if (typeOfValueA === typeOfValueB && a === b) {
+    return true
+  }
+
+  return false
+}
+
 module.exports = {
   clone,
+  isEqual,
   groupErrors,
   getTypeOfValue,
   getTypeName,

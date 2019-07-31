@@ -1,6 +1,6 @@
 import Filters from './filters'
 import Validators from './validators'
-import { clone, groupErrors, initializePromise, getTypeName, initializeFunctions, initializeChildPromise, filterDataByFields, prefilledDataByFields, getChildData } from './helper'
+import { clone, groupErrors, initializePromise, getTypeName, initializeFunctions, initializeChildPromise, filterDataByFields, prefilledDataByFields, getChildData, isEqual } from './helper'
 
 class Schema {
   constructor(fieldsSchema, prefilledSchema = false) {
@@ -122,8 +122,17 @@ class Schema {
           dataFilter[field] = previousResult
 
           if (this.schemas[field]) {
-            const promiseResult = await initializeChildPromise(field, this.schemas[field].filter, dataFilter[field])
-            dataFilter[field] = promiseResult.result
+            if (getTypeName(this.types[field]) === 'array' && !isEqual(dataFilter[field], this.fields[field])) {
+              let dataFilterCopy = dataFilter[field] || []
+              dataFilter[field] = []
+              for (let filterData of dataFilterCopy) {
+                const promiseResult = await initializeChildPromise(field, this.schemas[field].filter, filterData)
+                dataFilter[field].push(promiseResult.result)
+              }
+            } else if (!isEqual(dataFilter[field], this.fields[field])) {
+              const promiseResult = await initializeChildPromise(field, this.schemas[field].filter, dataFilter[field])
+              dataFilter[field] = promiseResult.result
+            }
           }
         }
       }
@@ -174,7 +183,16 @@ class Schema {
           if (typeof promises[field] === 'undefined') {
             promises[field] = []
           }
-          promises[field].push(await initializeChildPromise(field, this.schemas[field].validate, dataValidate[field]))
+
+          if (getTypeName(this.types[field]) === 'array' && !isEqual(dataValidate[field], this.fields[field])) {
+            let dataValidateCopy = dataValidate[field] || []
+            dataValidate[field] = []
+            for (let validateData of dataValidateCopy) {
+              promises[field].push(await initializeChildPromise(field, this.schemas[field].validate, validateData))
+            }
+          } else if (!isEqual(dataValidate[field], this.fields[field])) {
+            promises[field].push(await initializeChildPromise(field, this.schemas[field].validate, dataValidate[field]))
+          }
         }
       }
     } catch (e) {
@@ -193,7 +211,7 @@ class Schema {
         const validatorsData = promises[field]
 
         errors = Object.assign(errors, groupErrors(validatorsData))
-        data = Object.assign(data, getChildData(dataValidate, validatorsData))
+        data = Object.assign(data, getChildData(this.types, dataValidate, validatorsData))
       }
 
       if (Object.keys(errors).length > 0) {
@@ -227,8 +245,6 @@ class Schema {
 
       if (typeof this.schemas[field] !== 'undefined') {
         data[field]['schema'] = this.schemas[field].json()
-        delete data[field]['required']
-        delete data[field]['defaultValue']
       }
     })
 

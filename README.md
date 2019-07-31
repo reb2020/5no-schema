@@ -125,6 +125,24 @@ const schemaJson = {
         }
       }
     },
+    parameters: {
+      type: Array,
+      required: true,
+      defaultValue: [],
+      schema: {
+        name: {
+          type: String,
+          required: true,
+          filters: [
+            'lowerCase',
+          ],
+        },
+        value: {
+          type: String,
+          required: true,
+        },
+      },
+    },
     address: {
       type: Object,
       defaultValue: null,
@@ -153,6 +171,16 @@ const schemaJsonData = {
         firstName: 'FirstName',
         lastName: 'LastNname'
     },
+    parameters: [
+      {
+        name: 'FirstName',
+        value: 'LastNname',
+      },
+      {
+        name: 'FirstName1',
+        value: 'LastNname1',
+      },
+    ],
     roles: [
       'customer',
       'admin'
@@ -171,7 +199,20 @@ const SchemaDataFiltered = await SchemaData.filter(schemaJsonData)
   active: true,
   createdAt: 2018-12-12T10:12:12.000Z,
   updatedAt: '2018-12-12',
-  informations: { firstName: 'FirstName', lastName: 'LastNname' },
+  informations: {
+    firstName: 'FirstName',
+    lastName: 'LastNname',
+  },
+  parameters: [
+    {
+      name: 'firstname',
+      value: 'LastNname',
+    },
+    {
+      name: 'firstname1',
+      value: 'LastNname1',
+    },
+  ],
   roles: [ 'customer', 'admin' ],
   status: 'active'
 }
@@ -190,7 +231,10 @@ SchemaData.validate(SchemaDataFiltered).then(function(data) {
       { 
         firstName: [ 'firstName is required' ],
         lastName: [ 'lastName is required' ] 
-      } 
+      },
+      parameters: [
+          'parameters is required',
+        ],
     }
     */
 
@@ -212,6 +256,16 @@ const schemaJsonData = {
         firstName: 'FirstName',
         lastName: 'LastNname'
     },
+    parameters: [
+      {
+        name: 'FirstName',
+        value: 'LastNname',
+      },
+      {
+        name: 'FirstName1',
+        value: 'LastNname1',
+      },
+    ],
     roles: [
       'customer',
       'admin'
@@ -231,7 +285,20 @@ const SchemaDataFiltered = await SchemaData.filter(schemaJsonData)
   createdAt: 2018-12-12T10:12:12.000Z,
   updatedAt: '2018-12-12',
   address: null,
-  informations: { firstName: 'FirstName', lastName: 'LastNname' },
+  informations: { 
+    firstName: 'FirstName', 
+    lastName: 'LastNname' 
+  },
+  parameters: [
+    {
+      name: 'firstname',
+      value: 'LastNname',
+    },
+    {
+      name: 'firstname1',
+      value: 'LastNname1',
+    },
+  ],
   roles: [ 'customer', 'admin' ],
   status: 'active'
 }
@@ -270,6 +337,7 @@ const SchemaDataJsonOptions = SchemaData.json()
     },
     informations: {
       type: "object",
+      required: false,
       schema: {
         firstName: {
           type: "string",
@@ -280,6 +348,21 @@ const SchemaDataJsonOptions = SchemaData.json()
           required: true
         }
       }
+    },
+    parameters: {
+      type: 'array',
+      defaultValue: [],
+      required: true,
+      schema: {
+        name: {
+          type: 'string',
+          required: true,
+        },
+        value: {
+          type: 'string',
+          required: true,
+        },
+      },
     },
     address: {
       type: "object",

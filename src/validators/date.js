@@ -1,9 +1,9 @@
-import { isDateValid, getTypeOfValue } from '../helper'
+import { isDateValid, getTypeOfValue, isEqual } from '../helper'
 
 export default function({name, value, options, defaultValue}) {
   if (typeof value !== 'undefined' &&
     getTypeOfValue(value) === 'string' &&
-    value !== defaultValue &&
+    !isEqual(value, defaultValue) &&
     (typeof options.format === 'undefined' ||
     !isDateValid(value, options.format))
   ) {
