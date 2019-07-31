@@ -312,7 +312,9 @@ var isEqual = function isEqual(a, b) {
   var typeOfValueA = getTypeOfValue(a);
   var typeOfValueB = getTypeOfValue(b);
 
-  if (typeOfValueA === typeOfValueB && typeOfValueA === 'object') {
+  if (a === null && b === null || typeOfValueA === 'undefined' && typeOfValueB === 'undefined') {
+    return true;
+  } else if (typeOfValueA === typeOfValueB && typeOfValueA === 'object') {
     var aProps = Object.getOwnPropertyNames(a);
     var bProps = Object.getOwnPropertyNames(b);
 

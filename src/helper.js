@@ -169,7 +169,9 @@ const isEqual = (a, b) => {
   const typeOfValueA = getTypeOfValue(a)
   const typeOfValueB = getTypeOfValue(b)
 
-  if (typeOfValueA === typeOfValueB && typeOfValueA === 'object') {
+  if ((a === null && b === null) || (typeOfValueA === 'undefined' && typeOfValueB === 'undefined')) {
+    return true
+  } else if (typeOfValueA === typeOfValueB && typeOfValueA === 'object') {
     let aProps = Object.getOwnPropertyNames(a)
     let bProps = Object.getOwnPropertyNames(b)
 

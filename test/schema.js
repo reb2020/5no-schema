@@ -82,6 +82,10 @@ const schemaJson = {
     type: Array,
     defaultValue: null,
   },
+  roleName: {
+    type: String,
+    defaultValue: null,
+  },
 }
 
 const schemaJsonOptions = {
@@ -157,6 +161,11 @@ const schemaJsonOptions = {
     defaultValue: null,
     required: false,
   },
+  roleName: {
+    type: 'string',
+    defaultValue: null,
+    required: false,
+  },
 }
 
 const schemaJsonData = {
@@ -185,6 +194,7 @@ const schemaJsonData = {
     'customer',
     'admin',
   ],
+  roleName: null,
 }
 
 const schemaJsonDataReturn = {
@@ -212,6 +222,7 @@ const schemaJsonDataReturn = {
     'customer',
     'admin',
   ],
+  roleName: null,
 }
 
 const schemaPrefilledJsonData = {
@@ -238,6 +249,7 @@ const schemaPrefilledJsonData = {
     'customer',
     'admin',
   ],
+  roleName: null,
 }
 
 const schemaPrefilledDataReturn = {
@@ -266,6 +278,7 @@ const schemaPrefilledDataReturn = {
     'customer',
     'admin',
   ],
+  roleName: null,
 }
 
 const schemaPrefilledDataReturnOne = {
@@ -293,6 +306,7 @@ const schemaPrefilledDataReturnOne = {
     'customer',
     'admin',
   ],
+  roleName: null,
 }
 
 const schemaFilterJsonDataReturn = {
@@ -320,6 +334,7 @@ const schemaFilterJsonDataReturn = {
     'customer',
     'admin',
   ],
+  roleName: null,
 }
 
 const schemaFilterJsonDataReturnOnePart = {
