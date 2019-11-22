@@ -9,9 +9,13 @@ exports.default = function (_ref) {
       value = _ref.value,
       defaultValue = _ref.defaultValue;
 
-  if (typeof value === 'undefined' || !value && value !== defaultValue) {
+  var typeOfValue = (0, _helper.getTypeOfValue)(value);
+
+  if (typeof value === 'undefined' || !value && typeOfValue !== 'boolean' && !(0, _helper.isEqual)(value, defaultValue)) {
     return name + ' is required';
   }
 
   return true;
 };
+
+var _helper = require('../helper');

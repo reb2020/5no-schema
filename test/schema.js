@@ -4,6 +4,14 @@ const Schema = require('../compiled')
 
 const expect = chai.expect
 
+const schemaBooleanJson = {
+  active: {
+    type: Boolean,
+    required: true,
+    defaultValue: true,
+  },
+}
+
 const schemaJson = {
   id: {
     type: Number,
@@ -452,6 +460,18 @@ describe('Schema', () => {
       }
 
       expect(SchemaDataValidate).to.eql('type should be equal to one of the allowed values')
+    })
+
+    it('validator has not to return error of type Boolean', async() => {
+      const SchemaData = new Schema(schemaBooleanJson)
+      let SchemaDataValidate = null
+      try {
+        SchemaDataValidate = await SchemaData.validate(Object.assign({}, {active: false}))
+      } catch (e) {
+        SchemaDataValidate = e.active[0]
+      }
+
+      expect(SchemaDataValidate.active).to.eql(false)
     })
 
     it('validator has to return errors', async() => {
