@@ -15,6 +15,8 @@ exports.default = function (_ref) {
 
   if (typeName === 'date' && typeOfValue === 'string') {
     return true;
+  } else if (typeName === 'number' && typeOfValue === 'number') {
+    return true;
   }
 
   if (typeof value !== 'undefined' && !(0, _helper.isEqual)(value, defaultValue) && typeOfValue !== typeName) {

@@ -6,6 +6,8 @@ export default function({name, type, value, defaultValue}) {
 
   if (typeName === 'date' && typeOfValue === 'string') {
     return true
+  } else if (typeName === 'number' && typeOfValue === 'number') {
+    return true
   }
 
   if (typeof value !== 'undefined' && !isEqual(value, defaultValue) && typeOfValue !== typeName) {

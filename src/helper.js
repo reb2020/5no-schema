@@ -8,6 +8,11 @@ const formatDate = (date, format = 'YYYY-MM-DD HH:mm:ss') => {
   return moment(date).format(format)
 }
 
+const formatNumber = (num, format = '0.00') => {
+  const formatSplitted = format.split('.')
+  return Number(Number(num).toFixed(formatSplitted.length > 1 ? formatSplitted.pop().length : 0))
+}
+
 const clone = (data) => {
   return Object.assign({}, data)
 }
@@ -215,4 +220,5 @@ module.exports = {
   formatDate,
   initializePromise,
   getChildData,
+  formatNumber,
 }

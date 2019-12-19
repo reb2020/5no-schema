@@ -1,6 +1,6 @@
 {
   "name": "5no-schema",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "JSON Schema Filter/Validator",
   "main": "compiled/index.js",
   "scripts": {

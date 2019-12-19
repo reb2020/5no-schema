@@ -61,15 +61,16 @@ class Schema {
         this.schemas[field].isChild = true
       }
 
-      let dateFN = {
-        fn: 'date',
-        options: {
-          format: format,
-        },
+      let dataFN = {
+        fn: typeName,
       }
 
-      if (typeName === 'date') {
-        this.validators[field].push(dateFN)
+      if (typeof format !== 'undefined') {
+        dataFN.options = { format: format }
+      }
+
+      if (['date', 'number'].includes(typeName)) {
+        this.validators[field].push(dataFN)
       }
 
       if (validators) {
@@ -78,8 +79,8 @@ class Schema {
         }
       }
 
-      if (typeName === 'date') {
-        this.filters[field] = [dateFN]
+      if (['date', 'number'].includes(typeName)) {
+        this.filters[field] = [dataFN]
       } else {
         this.filters[field] = [typeName]
       }

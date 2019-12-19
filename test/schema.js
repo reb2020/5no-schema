@@ -16,6 +16,18 @@ const schemaJson = {
   id: {
     type: Number,
     defaultValue: null,
+    format: '0',
+    required: true,
+  },
+  amount: {
+    type: Number,
+    defaultValue: 0,
+    required: true,
+  },
+  cost: {
+    type: Number,
+    defaultValue: 0.00,
+    format: '0.00',
     required: true,
   },
   email: {
@@ -100,6 +112,18 @@ const schemaJsonOptions = {
   id: {
     type: 'number',
     defaultValue: null,
+    format: '0',
+    required: true,
+  },
+  amount: {
+    type: 'number',
+    defaultValue: 0,
+    required: true,
+  },
+  cost: {
+    type: 'number',
+    defaultValue: 0.00,
+    format: '0.00',
     required: true,
   },
   email: {
@@ -178,6 +202,8 @@ const schemaJsonOptions = {
 
 const schemaJsonData = {
   id: 123,
+  amount: 10.5,
+  cost: 12.89,
   email: 'customer@test.test',
   active: true,
   type: 'active',
@@ -207,6 +233,8 @@ const schemaJsonData = {
 
 const schemaJsonDataReturn = {
   id: 123,
+  amount: 10.5,
+  cost: 12.89,
   email: 'customer@test.test',
   active: true,
   type: 'active',
@@ -235,6 +263,8 @@ const schemaJsonDataReturn = {
 
 const schemaPrefilledJsonData = {
   id: 123,
+  amount: 10.5,
+  cost: 12.89,
   email: 'customer@test.test',
   type: 'active',
   createdAt: new Date('2018-12-12 12:12:12'),
@@ -262,6 +292,8 @@ const schemaPrefilledJsonData = {
 
 const schemaPrefilledDataReturn = {
   id: 123,
+  amount: 10.5,
+  cost: 12.89,
   email: 'customer@test.test',
   active: false,
   type: 'active',
@@ -291,6 +323,8 @@ const schemaPrefilledDataReturn = {
 
 const schemaPrefilledDataReturnOne = {
   id: 123,
+  amount: 10.5,
+  cost: 12.89,
   email: 'customer@test.test',
   active: false,
   type: 'active',
@@ -319,6 +353,8 @@ const schemaPrefilledDataReturnOne = {
 
 const schemaFilterJsonDataReturn = {
   id: 123,
+  amount: 10.5,
+  cost: 12.89,
   email: 'customer@test.test',
   active: true,
   type: 'active',
@@ -347,6 +383,7 @@ const schemaFilterJsonDataReturn = {
 
 const schemaFilterJsonDataReturnOnePart = {
   id: 123,
+  cost: 12.89,
   active: true,
   createdAt: new Date('2018-12-12 12:12:12'),
 }
@@ -376,6 +413,18 @@ describe('Schema', () => {
       }
 
       expect(SchemaDataValidate).to.eql('id has incorrect type')
+    })
+
+    it('validator has to return error of format Number', async() => {
+      const SchemaData = new Schema(schemaJson)
+      let SchemaDataValidate = null
+      try {
+        SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {cost: 12.123}))
+      } catch (e) {
+        SchemaDataValidate = e.cost[0]
+      }
+
+      expect(SchemaDataValidate).to.eql('cost has incorrect number format')
     })
 
     it('validator has to return error of type String', async() => {
@@ -515,6 +564,8 @@ describe('Schema', () => {
       try {
         SchemaDataValidate = await SchemaData.validate({
           id: 123,
+          amount: 10.5,
+          cost: 10.5,
           email: '',
           informations: {},
           parameters: [],
@@ -523,7 +574,7 @@ describe('Schema', () => {
         SchemaDataValidate = e
       }
 
-      expect(SchemaDataValidate).to.eql({ active: false, id: 123, email: '', informations: {}, parameters: [] })
+      expect(SchemaDataValidate).to.eql({ active: false, id: 123, amount: 10.5, cost: 10.5, email: '', informations: {}, parameters: [] })
     })
 
     it('validator has to return errors of required fields', async() => {
@@ -539,6 +590,8 @@ describe('Schema', () => {
 
       expect(SchemaDataValidate).to.eql({
         id: ['id is required'],
+        amount: ['amount is required'],
+        cost: ['cost is required'],
         email: ['email is required'],
         informations: [
           'informations is required',
@@ -629,6 +682,7 @@ describe('Schema', () => {
       const SchemaData = new Schema(schemaJson)
       const SchemaDataFiltered = await SchemaData.filter(Object.assign({}, schemaJsonData, {
         id: '123',
+        cost: 12.892,
         active: 1,
         createdAt: '2018-12-12 12:12:12',
       }))
@@ -639,7 +693,8 @@ describe('Schema', () => {
     it('filter has to return one part of correct data types', async() => {
       const SchemaData = new Schema(schemaJson)
       const SchemaDataFiltered = await SchemaData.filter(Object.assign({}, {
-        id: '123',
+        id: 123.1,
+        cost: '12.892',
         active: 1,
         createdAt: '2018-12-12 12:12:12',
       }))

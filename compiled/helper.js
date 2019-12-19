@@ -26,6 +26,13 @@ var formatDate = function formatDate(date) {
   return (0, _moment2.default)(date).format(format);
 };
 
+var formatNumber = function formatNumber(num) {
+  var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '0.00';
+
+  var formatSplitted = format.split('.');
+  return Number(Number(num).toFixed(formatSplitted.length > 1 ? formatSplitted.pop().length : 0));
+};
+
 var clone = function clone(data) {
   return Object.assign({}, data);
 };
@@ -357,5 +364,6 @@ module.exports = {
   isDateValid: isDateValid,
   formatDate: formatDate,
   initializePromise: initializePromise,
-  getChildData: getChildData
+  getChildData: getChildData,
+  formatNumber: formatNumber
 };

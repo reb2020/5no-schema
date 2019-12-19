@@ -699,15 +699,16 @@ var Schema = function Schema(fieldsSchema) {
       _this.schemas[field].isChild = true;
     }
 
-    var dateFN = {
-      fn: 'date',
-      options: {
-        format: format
-      }
+    var dataFN = {
+      fn: typeName
     };
 
-    if (typeName === 'date') {
-      _this.validators[field].push(dateFN);
+    if (typeof format !== 'undefined') {
+      dataFN.options = { format: format };
+    }
+
+    if (['date', 'number'].includes(typeName)) {
+      _this.validators[field].push(dataFN);
     }
 
     if (validators) {
@@ -737,8 +738,8 @@ var Schema = function Schema(fieldsSchema) {
       }
     }
 
-    if (typeName === 'date') {
-      _this.filters[field] = [dateFN];
+    if (['date', 'number'].includes(typeName)) {
+      _this.filters[field] = [dataFN];
     } else {
       _this.filters[field] = [typeName];
     }
