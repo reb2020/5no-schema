@@ -1,5 +1,5 @@
 {
-  "name": "5no-schema",
+  "name": "5no/schema",
   "version": "1.2.2",
   "description": "JSON Schema Filter/Validator",
   "main": "compiled/index.js",
@@ -27,7 +27,7 @@
     "json-schema-validator",
     "json-schema-validation"
   ],
-  "homepage": "https://github.com/reb2020/5no-schema#readme",
+  "homepage": "https://5no.io/schema/install",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/reb2020/5no-schema.git"
