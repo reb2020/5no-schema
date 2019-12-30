@@ -4,10 +4,10 @@ JSON Schema Filter/Validator
 
 ## Install
 
-5no/schema requires Node version 8 or above.
+@5no/schema requires Node version 8 or above.
 
 ```sh
-npm install --save 5no/schema
+npm install --save @5no/schema
 ```
 
 ## Doc
@@ -42,7 +42,7 @@ const customFilertOrValidator = ({name, type, value, defaultValue, previousResul
 ## Examples
 
 ```js
-const Schema = require('5no/schema')
+const Schema = require('@5no/schema')
 
 const schemaJson = {
     id: {
