@@ -1,15 +1,19 @@
 {
   "name": "@5no/schema",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "JSON Schema Filter/Validator",
-  "main": "compiled/index.js",
+  "main": "lib/index.js",
+  "files": [ "lib/index.js", "lib/*.js" ],
+  "directories": {
+    "lib": "lib/"
+  },
   "scripts": {
-    "clean": "rm -rf compiled",
+    "clean": "rm -rf lib",
     "lint": "eslint --ext .js src",
     "lint:fix": "eslint --fix --ext .js src",
     "test": "mocha test",
-    "build": "babel src -d compiled",
-    "release": "yarn lint && yarn clean && yarn build && yarn test"
+    "build": "babel src -d lib",
+    "prepare": "yarn lint && yarn clean && yarn build && yarn test"
   },
   "author": "reb2020",
   "license": "MIT",

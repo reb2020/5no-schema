@@ -1,6 +1,6 @@
 const chai = require('chai')
 
-const Schema = require('../compiled')
+const Schema = require('../lib')
 
 const expect = chai.expect
 
