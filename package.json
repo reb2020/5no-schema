@@ -3,7 +3,10 @@
   "version": "1.2.4",
   "description": "JSON Schema Filter/Validator",
   "main": "lib/index.js",
-  "files": [ "lib/index.js", "lib/*.js" ],
+  "files": [
+    "lib/index.js",
+    "lib/*.js"
+  ],
   "directories": {
     "lib": "lib/"
   },
@@ -37,7 +40,7 @@
     "url": "git+https://github.com/reb2020/5no-schema.git"
   },
   "dependencies": {
-    "moment": "^2.22.2"
+    "moment": "^2.24.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
