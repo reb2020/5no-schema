@@ -57,7 +57,7 @@ class Schema {
       }
 
       if (schema) {
-        this.schemas[field] = new Schema(schema)
+        this.schemas[field] = new Schema(schema, prefilledSchema)
         this.schemas[field].isChild = true
       }
 

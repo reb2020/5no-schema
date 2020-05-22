@@ -74,6 +74,18 @@ const schemaJson = {
         type: String,
         required: true,
       },
+      phone: {
+        type: Object,
+        defaultValue: {},
+        schema: {
+          number: {
+            type: String,
+            required: false,
+            prefilled: true,
+            defaultValue: '100500',
+          },
+        },
+      },
     },
   },
   parameters: {
@@ -166,6 +178,18 @@ const schemaJsonOptions = {
         type: 'string',
         required: true,
       },
+      phone: {
+        type: 'object',
+        required: false,
+        defaultValue: {},
+        schema: {
+          number: {
+            type: 'string',
+            required: false,
+            defaultValue: '100500',
+          },
+        },
+      },
     },
   },
   parameters: {
@@ -243,6 +267,9 @@ const schemaJsonDataReturn = {
   informations: {
     firstName: 'FirstName',
     lastName: 'LastNname',
+    phone: {
+      number: '100500',
+    },
   },
   parameters: [
     {
@@ -303,6 +330,7 @@ const schemaPrefilledDataReturn = {
   informations: {
     firstName: 'firstname',
     lastName: 'LastNname',
+    phone: {},
   },
   parameters: [
     {
