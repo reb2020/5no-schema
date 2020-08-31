@@ -1,25 +1,19 @@
 import moment from 'moment'
 
-const isDateValid = (date, format = 'YYYY-MM-DD HH:mm:ss') => {
-  return moment(date, format, true).isValid()
-}
+export const isDateValid = (date: string | Date, format: string = 'YYYY-MM-DD HH:mm:ss'): boolean => moment(date, format, true).isValid()
 
-const formatDate = (date, format = 'YYYY-MM-DD HH:mm:ss') => {
-  return moment(date).format(format)
-}
+export const formatDate = (date: string | Date, format: string = 'YYYY-MM-DD HH:mm:ss'): string => moment(date).format(format)
 
-const formatNumber = (num, format = '0.00') => {
-  const formatSplitted = format.split('.')
+export const formatNumber = (num: number | string, format: string = '0.00'): number => {
+  const formatSplitted: Array<any> = format.split('.')
   return Number(Number(num).toFixed(formatSplitted.length > 1 ? formatSplitted.pop().length : 0))
 }
 
-const clone = (data) => {
-  return Object.assign({}, data)
-}
+export const clone = (data: object): object => Object.assign({}, data)
 
-const groupErrors = (errors) => {
-  let group = {}
-  for (let error of errors) {
+export const groupErrors = (errors: Array<FiveNoSchema.ChildResult>): FiveNoSchema.List<Array<string>> => {
+  const group = {}
+  for (const error of errors) {
     if (typeof error.result !== 'undefined' && ((error.child !== true && error.result !== true) || (error.child === true && error.errors))) {
       if (typeof group[error.field] === 'undefined') {
         group[error.field] = []
@@ -39,7 +33,7 @@ const groupErrors = (errors) => {
   return group
 }
 
-const getTypeName = (type) => {
+export const getTypeName = (type: any): FiveNoSchema.AllowTypes => {
   let typeName = null
   if (typeof type === 'string') {
     typeName = type.toLowerCase()
@@ -50,7 +44,7 @@ const getTypeName = (type) => {
   return typeName
 }
 
-const getTypeOfValue = (value) => {
+export const getTypeOfValue = (value: any): string => {
   let typeOfValue = typeof value
 
   if (typeOfValue === 'object' && value !== null) {
@@ -60,10 +54,10 @@ const getTypeOfValue = (value) => {
   return typeOfValue
 }
 
-const getChildData = (types, allData, result) => {
-  for (let data of result) {
+export const getChildData = (types: FiveNoSchema.List<FiveNoSchema.AllowTypes>, allData: FiveNoSchema.List<any>, result: Array<FiveNoSchema.ChildResult>): FiveNoSchema.List<any> => {
+  for (const data of result) {
     if (data.child === true) {
-      if (getTypeName(types[data.field]) === 'array') {
+      if (types[data.field] === 'array') {
         allData[data.field].push(data.result)
       } else {
         allData[data.field] = data.result
@@ -73,48 +67,44 @@ const getChildData = (types, allData, result) => {
   return allData
 }
 
-const initializeChildPromise = (field, fn, data) => {
-  return new Promise((resolve) => {
-    Promise.resolve(fn(data)).then((result) => {
-      resolve({
-        field: field,
-        child: true,
-        errors: null,
-        result: result,
-      })
-    }).catch((errors) => {
-      resolve({
-        field: field,
-        child: true,
-        errors: errors,
-        result: null,
-      })
+export const initializeChildPromise = (field: string, fn: FiveNoSchema.SchemaFn, data: object): Promise<FiveNoSchema.ChildResult> => new Promise((resolve) => {
+  Promise.resolve(fn(data)).then((result) => {
+    resolve({
+      field: field,
+      child: true,
+      errors: null,
+      result: result,
+    })
+  }).catch((errors) => {
+    resolve({
+      field: field,
+      child: true,
+      errors: errors,
+      result: null,
     })
   })
-}
+})
 
-const initializePromise = (field, objectData) => {
-  return new Promise((resolve) => {
-    Promise.resolve(objectData.fn(objectData.data)).then((result) => {
-      resolve({
-        field: field,
-        child: false,
-        result: result,
-      })
-    }).catch((error) => {
-      resolve({
-        field: field,
-        child: false,
-        result: error.message,
-      })
+export const initializePromise = (field: string, objectData: FiveNoSchema.InitializeFunctions): Promise<FiveNoSchema.Result> => new Promise((resolve) => {
+  Promise.resolve(objectData.fn(objectData.data)).then((result) => {
+    resolve({
+      field: field,
+      child: false,
+      result: result,
+    })
+  }).catch((error) => {
+    resolve({
+      field: field,
+      child: false,
+      result: error.message,
     })
   })
-}
+})
 
-const initializeFunctions = (functionsData, functionsList, functionArguments) => {
-  let initializeFunctionsData = []
-  for (let functionData of functionsData) {
-    let functionObject = functionData
+export const initializeFunctions = (functionsData: Array<string | FiveNoSchema.FnInit>, functionsList: FiveNoSchema.Validators | FiveNoSchema.Filters, functionArguments: FiveNoSchema.FunctionArguments): Array<FiveNoSchema.InitializeFunctions> => {
+  const initializeFunctionsData = [] as Array<FiveNoSchema.InitializeFunctions>
+  for (const functionData of functionsData) {
+    let functionObject: any = functionData
     let functionOptions = {}
 
     if (typeof functionData === 'object' &&
@@ -133,8 +123,8 @@ const initializeFunctions = (functionsData, functionsList, functionArguments) =>
     initializeFunctionsData.push({
       fn: functionObject,
       data: {
-        options: functionOptions,
         ...functionArguments,
+        options: functionOptions,
       },
     })
   }
@@ -142,17 +132,17 @@ const initializeFunctions = (functionsData, functionsList, functionArguments) =>
   return initializeFunctionsData
 }
 
-const filterDataByFields = (data, fields, prefilled) => {
-  let returnData = {}
+export const filterDataByFields = (data: FiveNoSchema.List<any>, fields: FiveNoSchema.List<any>, prefilled: FiveNoSchema.List<boolean>): FiveNoSchema.List<any> => {
+  const returnData = {}
   const allowFields = Object.keys(fields)
 
-  for (let field of Object.keys(prefilled)) {
+  for (const field of Object.keys(prefilled)) {
     if (prefilled[field] === true) {
       returnData[field] = fields[field]
     }
   }
 
-  for (let field of Object.keys(data)) {
+  for (const field of Object.keys(data)) {
     if (allowFields.includes(field)) {
       returnData[field] = data[field]
     }
@@ -161,31 +151,31 @@ const filterDataByFields = (data, fields, prefilled) => {
   return returnData
 }
 
-const prefilledDataByFields = (data, fields) => {
-  let returnData = {}
-  for (let field of Object.keys(fields)) {
+export const prefilledDataByFields = (data: FiveNoSchema.List<any>, fields: FiveNoSchema.List<any>): FiveNoSchema.List<any> => {
+  const returnData = {}
+  for (const field of Object.keys(fields)) {
     returnData[field] = typeof data[field] !== 'undefined' ? data[field] : fields[field]
   }
 
   return returnData
 }
 
-const isEqual = (a, b) => {
+export const isEqual = (a: any, b: any): boolean => {
   const typeOfValueA = getTypeOfValue(a)
   const typeOfValueB = getTypeOfValue(b)
 
   if ((a === null && b === null) || (typeOfValueA === 'undefined' && typeOfValueB === 'undefined')) {
     return true
   } else if (typeOfValueA === typeOfValueB && typeOfValueA === 'object') {
-    let aProps = Object.getOwnPropertyNames(a)
-    let bProps = Object.getOwnPropertyNames(b)
+    const aProps = Object.getOwnPropertyNames(a)
+    const bProps = Object.getOwnPropertyNames(b)
 
     if (aProps.length != bProps.length) {
       return false
     }
 
     for (let i = 0; i < aProps.length; i++) {
-      let propName = aProps[i]
+      const propName = aProps[i]
 
       if (a[propName] !== b[propName]) {
         return false
@@ -204,21 +194,4 @@ const isEqual = (a, b) => {
   }
 
   return false
-}
-
-module.exports = {
-  clone,
-  isEqual,
-  groupErrors,
-  getTypeOfValue,
-  getTypeName,
-  filterDataByFields,
-  prefilledDataByFields,
-  initializeFunctions,
-  initializeChildPromise,
-  isDateValid,
-  formatDate,
-  initializePromise,
-  getChildData,
-  formatNumber,
 }

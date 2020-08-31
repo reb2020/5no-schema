@@ -1,4 +1,4 @@
-export default function({value, defaultValue}) {
+export default function({ value, defaultValue }: FiveNoSchema.InitializeFnParams): string | null {
   if (value === null) {
     return null
   }

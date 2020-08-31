@@ -1,6 +1,6 @@
 import { formatNumber, isEqual, getTypeOfValue } from '../helper'
 
-export default function({name, value, options, defaultValue}) {
+export default function({ name, value, options, defaultValue }: FiveNoSchema.InitializeFnParams): boolean | string {
   if (typeof value !== 'undefined' &&
     getTypeOfValue(value) === 'number' &&
     !isEqual(value, defaultValue) &&

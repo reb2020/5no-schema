@@ -13,27 +13,25 @@
     "eslint:recommended",
     "standard"
   ],
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true,
-      "arrowFunctions":true
-    },
+    "ecmaVersion": 2018, 
     "sourceType": "module"
   },
-  "plugins": [],
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "rules": {
-    "no-console": [2, { "allow": ["warn", "error"] }],
+    "no-console": [2, { "allow": ["warn", "error", "info"] }],
     "linebreak-style": [
       "error",
       "unix"
     ],
+    "space-before-function-paren": ["error", "never"],
+    "arrow-body-style": ["error", "as-needed"],
     "camelcase": 0,
-    "no-multi-spaces": 0,
     "no-mixed-operators": 0,
     "no-return-assign": 0,
-    "space-before-function-paren": ["error", "never"],
-    "no-extra-parens": 0,
     "brace-style": 0,
     "operator-linebreak": ["error", "after"],
     "no-unused-expressions": 0,
@@ -42,12 +40,12 @@
     "no-useless-return": 0,
     "eqeqeq": 0,
     "no-case-declarations": 0,
-    "no-useless-escape" : "off",
-    "react/prop-types": 0,
-    "no-unused-vars": [
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
       "error",
       { "ignoreRestSiblings": true }
     ],
-    "comma-dangle": ["error", "always-multiline"]
+    "comma-dangle": ["error", "always-multiline"],
+    "no-useless-escape" : "off"
   }
 }

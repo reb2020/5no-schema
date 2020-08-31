@@ -1,6 +1,6 @@
 import { getTypeOfValue, isEqual } from '../helper'
 
-export default function({name, value, defaultValue}) {
+export default function({ name, value, defaultValue }: FiveNoSchema.InitializeFnParams): boolean | string {
   if (typeof value !== 'undefined' &&
         getTypeOfValue(value) === 'string' &&
         !isEqual(value, defaultValue)
@@ -12,7 +12,7 @@ export default function({name, value, defaultValue}) {
       const parts = value.split('@')
       const domainParts = parts[1].split('.')
 
-      if (parts[0].length < 64 && !domainParts.some(part => part.length > 63)) {
+      if (parts[0].length < 64 && !domainParts.some((part: string): boolean => part.length > 63)) {
         return true
       }
     }

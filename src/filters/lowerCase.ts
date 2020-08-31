@@ -1,6 +1,6 @@
 import { getTypeOfValue } from '../helper'
 
-export default function({value}) {
+export default function({ value }: FiveNoSchema.InitializeFnParams): string | null {
   if (value === null) {
     return null
   }
@@ -8,7 +8,7 @@ export default function({value}) {
   const typeOfValue = getTypeOfValue(value)
 
   if (typeOfValue === 'string') {
-    return value.trim()
+    return value.toLowerCase()
   }
 
   return value

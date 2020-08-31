@@ -1,6 +1,6 @@
 import { isDateValid, getTypeOfValue, isEqual } from '../helper'
 
-export default function({name, value, options, defaultValue}) {
+export default function({ name, value, options, defaultValue }: FiveNoSchema.InitializeFnParams): boolean | string {
   if (typeof value !== 'undefined' &&
     getTypeOfValue(value) === 'string' &&
     !isEqual(value, defaultValue) &&

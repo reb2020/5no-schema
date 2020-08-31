@@ -1,6 +1,6 @@
 import { getTypeOfValue, isEqual } from '../helper'
 
-export default function({name, value, defaultValue}) {
+export default function({ name, value, defaultValue }: FiveNoSchema.InitializeFnParams): boolean | string {
   const typeOfValue = getTypeOfValue(value)
 
   if (typeof value === 'undefined' || (!value && typeOfValue !== 'boolean' && !isEqual(value, defaultValue))) {

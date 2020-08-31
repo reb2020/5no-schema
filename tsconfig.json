@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+      "outDir": "lib",
+      "module": "commonjs",
+      "target": "es5",
+      "lib": [
+        "es5",
+        "es6"
+      ],
+      "baseUrl": ".",
+      "paths": {
+        "filters/*": ["src/filters/*"],
+        "validators/*": ["src/validators/*"],
+        "typings/*": ["typings/*"]
+      },
+      "typeRoots": [
+        "./node_modules/@types",
+        "./typings"
+      ],
+      "sourceMap": false,
+      "allowJs": false,
+      "emitDeclarationOnly": false,
+      "noEmit": false,
+      "declaration": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "moduleResolution": "node",
+      "rootDir": "src",
+      "forceConsistentCasingInFileNames": true,
+      "noImplicitReturns": true,
+      "noImplicitThis": true,
+      "noImplicitAny": true,
+      "importHelpers": true,
+      "strictNullChecks": true,
+      "suppressImplicitAnyIndexErrors": true,
+      "noUnusedLocals": false,
+      "strict": true,
+      "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*",
+    "typings/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

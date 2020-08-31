@@ -1,6 +1,6 @@
 import { formatDate } from '../helper'
 
-export default function({value, options, defaultValue}) {
+export default function({ value, options, defaultValue }: FiveNoSchema.InitializeFnParams): string | Date | null {
   if (value === null) {
     return null
   }

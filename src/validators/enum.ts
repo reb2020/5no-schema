@@ -1,6 +1,6 @@
 import { isEqual } from '../helper'
 
-export default function({name, value, options, defaultValue}) {
+export default function({ name, value, options, defaultValue }: FiveNoSchema.InitializeFnParams): boolean | string {
   if (typeof value !== 'undefined' &&
     !isEqual(value, defaultValue) &&
     !options.allowedValues.includes(value)
