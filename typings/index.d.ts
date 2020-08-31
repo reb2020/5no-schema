@@ -9,7 +9,7 @@ declare namespace FiveNoSchema {
     name: string;
     type: AllowTypes;
     value: any;
-    defaultValue: any; 
+    defaultValue: any;
     options: {
       [name: string]: any;
     };
@@ -41,7 +41,7 @@ declare namespace FiveNoSchema {
     enum: Fn;
     number: Fn;
   }
-  
+
   interface Filters {
     number: Fn;
     string: Fn;
@@ -54,7 +54,7 @@ declare namespace FiveNoSchema {
     upperCase: Fn;
   }
 
-  type FunctionArguments = Omit<InitializeFnParams, "options">;
+  type FunctionArguments = Omit<InitializeFnParams, 'options'>;
 
   interface FnInit {
     fn: string | Fn;
@@ -73,7 +73,7 @@ declare namespace FiveNoSchema {
     child: boolean;
     result: any;
   }
-  
+
   interface ChildResult {
     field: string;
     child: boolean;

@@ -1,9 +1,9 @@
 {
   "name": "@5no/schema",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "JSON Schema Filter/Validator",
   "main": "lib/index.js",
-  "types": "typings/index.d.ts",
+  "types": "lib/index.d.ts",
   "files": [
     "lib/index.js",
     "lib/index.d.ts",
@@ -15,16 +15,16 @@
     "lib/validators/*.d.ts"
   ],
   "directories": {
-    "lib": "lib/",
-    "typings": "typings/"
+    "lib": "lib/"
   },
   "scripts": {
     "clean": "rm -rf lib",
+    "copy": "cp typings/index.d.ts lib/index.d.ts",
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --fix --ext .ts src",
     "test": "mocha test",
     "build": "tsc",
-    "prepare": "yarn lint && yarn clean && yarn build && yarn test"
+    "prepare": "yarn lint && yarn clean && yarn build && yarn copy && yarn test"
   },
   "author": "reb2020",
   "license": "MIT",
