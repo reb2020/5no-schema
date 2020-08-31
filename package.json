@@ -1,17 +1,22 @@
 {
   "name": "@5no/schema",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "JSON Schema Filter/Validator",
   "main": "lib/index.js",
   "types": "typings/index.d.ts",
   "files": [
     "lib/index.js",
+    "lib/index.d.ts",
     "lib/*.js",
+    "lib/*.d.ts",
     "lib/filters/*.js",
-    "lib/validators/*.js"
+    "lib/filters/*.d.ts",
+    "lib/validators/*.js",
+    "lib/validators/*.d.ts"
   ],
   "directories": {
-    "lib": "lib/"
+    "lib": "lib/",
+    "typings": "typings/"
   },
   "scripts": {
     "clean": "rm -rf lib",
