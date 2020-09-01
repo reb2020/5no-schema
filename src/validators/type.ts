@@ -1,3 +1,4 @@
+import { FiveNoSchema } from '../../typings/app'
 import { getTypeOfValue, isEqual } from '../helper'
 
 export default function({ name, type, value, defaultValue }: FiveNoSchema.InitializeFnParams): boolean | string {

@@ -1,3 +1,4 @@
+import { FiveNoSchema } from '../../typings/app'
 import { formatNumber } from '../helper'
 
 export default function({ value, options, defaultValue }: FiveNoSchema.InitializeFnParams): number | string | null {

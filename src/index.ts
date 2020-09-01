@@ -1,6 +1,7 @@
 import Filters from './filters'
 import Validators from './validators'
 import { clone, groupErrors, initializePromise, getTypeName, initializeFunctions, initializeChildPromise, filterDataByFields, prefilledDataByFields, getChildData, isEqual } from './helper'
+import { FiveNoSchema } from '../typings/app'
 
 class Schema implements FiveNoSchema.Schema {
   isChild = false

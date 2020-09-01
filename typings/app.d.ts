@@ -1,4 +1,6 @@
-declare namespace FiveNoSchema {
+import Schema from '../lib/index'
+
+export namespace FiveNoSchema {
   type AllowTypes = 'string' | 'number' | 'boolean' | 'object' | 'array' | 'date';
 
   interface List<T> {
@@ -91,24 +93,4 @@ declare namespace FiveNoSchema {
   }
 }
 
-declare module '@5no/schema' {
-  class Schema implements FiveNoSchema.Schema {
-    isChild: boolean;
-    private _schemas;
-    private _fields;
-    private _validators;
-    private _filters;
-    private _allowedValues;
-    private _formats;
-    private _types;
-    private _prefilled;
-    private _required;
-    private _prefilledSchema;
-    constructor(fieldsSchema: FiveNoSchema.FieldsSchema, prefilledSchema?: boolean);
-    filter: (data: object) => Promise<object>;
-    validate: (data: object) => Promise<object>;
-    json: () => {};
-  }
-
-  export = Schema
-}
+export default Schema

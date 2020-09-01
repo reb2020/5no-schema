@@ -1,3 +1,4 @@
+import { FiveNoSchema } from '../../typings/app'
 import { getTypeOfValue } from '../helper'
 
 export default function({ value }: FiveNoSchema.InitializeFnParams): null | Array<any> {
