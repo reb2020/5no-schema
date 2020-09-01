@@ -1,7 +1,7 @@
 import { FiveNoSchema } from '../../typings/app'
 import { getTypeOfValue, isEqual } from '../helper'
 
-export default function({ name, value, defaultValue }: FiveNoSchema.InitializeFnParams): boolean | string {
+export default function({ value, defaultValue, t }: FiveNoSchema.InitializeFnParams): boolean | string {
   if (typeof value !== 'undefined' &&
         getTypeOfValue(value) === 'string' &&
         !isEqual(value, defaultValue)
@@ -18,7 +18,7 @@ export default function({ name, value, defaultValue }: FiveNoSchema.InitializeFn
       }
     }
 
-    return `${name} has incorrect email format`
+    return t('%name% has incorrect email format')
   }
 
   return true

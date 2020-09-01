@@ -15,6 +15,7 @@ export namespace FiveNoSchema {
     };
     allValues: object;
     previousResult: any;
+    t: (value: string) => string;
   }
 
   interface FieldsSchema {
@@ -55,7 +56,7 @@ export namespace FiveNoSchema {
     upperCase: Fn;
   }
 
-  type FunctionArguments = Omit<InitializeFnParams, 'options'>;
+  type FunctionArguments = Omit<InitializeFnParams, 'options' | 't'>;
 
   interface FnInit {
     fn: string | Fn;

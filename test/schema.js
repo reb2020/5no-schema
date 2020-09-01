@@ -1,6 +1,11 @@
 const chai = require('chai')
 
 const Schema = require('../index')
+const Translator = require('../translator')
+
+Translator.setLib({
+  '%name% has incorrect type': '%name% has incorrect type :)',
+})
 
 const expect = chai.expect
 
@@ -457,7 +462,7 @@ describe('Schema', () => {
         SchemaDataValidate = e.id[0]
       }
 
-      expect(SchemaDataValidate).to.eql('id has incorrect type')
+      expect(SchemaDataValidate).to.eql('id has incorrect type :)')
     })
 
     it('validator has to return error of format Number', async() => {
@@ -481,7 +486,7 @@ describe('Schema', () => {
         SchemaDataValidate = e.email[0]
       }
 
-      expect(SchemaDataValidate).to.eql('email has incorrect type')
+      expect(SchemaDataValidate).to.eql('email has incorrect type :)')
     })
 
     it('validator has to return error of type Boolean', async() => {
@@ -493,7 +498,7 @@ describe('Schema', () => {
         SchemaDataValidate = e.active[0]
       }
 
-      expect(SchemaDataValidate).to.eql('active has incorrect type')
+      expect(SchemaDataValidate).to.eql('active has incorrect type :)')
     })
 
     it('validator has to return error of type Date', async() => {
@@ -517,7 +522,7 @@ describe('Schema', () => {
         SchemaDataValidate = e.address[0]
       }
 
-      expect(SchemaDataValidate).to.eql('address has incorrect type')
+      expect(SchemaDataValidate).to.eql('address has incorrect type :)')
     })
 
     it('validator has to return error of type Array', async() => {
@@ -529,7 +534,7 @@ describe('Schema', () => {
         SchemaDataValidate = e.roles[0]
       }
 
-      expect(SchemaDataValidate).to.eql('roles has incorrect type')
+      expect(SchemaDataValidate).to.eql('roles has incorrect type :)')
     })
 
     it('validator has to return error of type String with additional validator by email', async() => {
@@ -585,12 +590,12 @@ describe('Schema', () => {
       }
 
       expect(SchemaDataValidate).to.eql({
-        id: ['id has incorrect type'],
-        email: ['email has incorrect type'],
-        active: ['active has incorrect type'],
-        createdAt: ['createdAt has incorrect type'],
-        roles: ['roles has incorrect type'],
-        informations: ['informations has incorrect type'],
+        id: ['id has incorrect type :)'],
+        email: ['email has incorrect type :)'],
+        active: ['active has incorrect type :)'],
+        createdAt: ['createdAt has incorrect type :)'],
+        roles: ['roles has incorrect type :)'],
+        informations: ['informations has incorrect type :)'],
       })
     })
 
@@ -615,11 +620,11 @@ describe('Schema', () => {
       }
 
       expect(SchemaDataValidate).to.eql({
-        id: ['id has incorrect type'],
-        email: ['email has incorrect type'],
-        active: ['active has incorrect type'],
-        createdAt: ['createdAt has incorrect type'],
-        roles: ['roles has incorrect type'],
+        id: ['id has incorrect type :)'],
+        email: ['email has incorrect type :)'],
+        active: ['active has incorrect type :)'],
+        createdAt: ['createdAt has incorrect type :)'],
+        roles: ['roles has incorrect type :)'],
         informations: {
           id: [
             'id has incorrect uuid format',

@@ -2,6 +2,8 @@ import moment from 'moment'
 
 import { FiveNoSchema } from '../typings/app'
 
+import { translate } from './translator'
+
 export const isDateValid = (date: string | Date, format: string = 'YYYY-MM-DD HH:mm:ss'): boolean => moment(date, format, true).isValid()
 
 export const formatDate = (date: string | Date, format: string = 'YYYY-MM-DD HH:mm:ss'): string => moment(date).format(format)
@@ -127,6 +129,7 @@ export const initializeFunctions = (functionsData: Array<string | FiveNoSchema.F
       data: {
         ...functionArguments,
         options: functionOptions,
+        t: (value) => translate(value).replace(/\%value\%/g, functionArguments.value).replace(/\%name\%/g, functionArguments.name),
       },
     })
   }
