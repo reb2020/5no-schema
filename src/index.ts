@@ -244,4 +244,4 @@ class Schema implements FiveNoSchema.Schema {
   }
 }
 
-module.exports = Schema
+export default Schema
