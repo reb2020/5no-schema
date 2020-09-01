@@ -1,5 +1,3 @@
-import Schema from '../lib/index'
-
 export namespace FiveNoSchema {
   type AllowTypes = 'string' | 'number' | 'boolean' | 'object' | 'array' | 'date';
 
@@ -92,5 +90,3 @@ export namespace FiveNoSchema {
     json: () => object;
   }
 }
-
-export default Schema

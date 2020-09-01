@@ -1,12 +1,13 @@
 {
   "name": "@5no/schema",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "JSON Schema Filter/Validator",
   "main": "index.js",
-  "types": "typings/app.d.ts",
+  "types": "typings/index.d.ts",
   "files": [
     "index.js",
     "typings/app.d.ts",
+    "typings/index.d.ts",
     "lib/index.js",
     "lib/index.d.ts",
     "lib/*.js",
