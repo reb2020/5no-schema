@@ -40,6 +40,7 @@ export namespace FiveNoSchema {
     email: Fn;
     enum: Fn;
     number: Fn;
+    uuidv4: Fn;
   }
 
   interface Filters {

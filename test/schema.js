@@ -63,6 +63,13 @@ const schemaJson = {
     required: true,
     defaultValue: {},
     schema: {
+      id: {
+        type: String,
+        required: true,
+        validators: [
+          'uuidv4',
+        ],
+      },
       firstName: {
         type: String,
         required: true,
@@ -170,6 +177,10 @@ const schemaJsonOptions = {
     defaultValue: {},
     required: true,
     schema: {
+      id: {
+        type: 'string',
+        required: true,
+      },
       firstName: {
         type: 'string',
         required: true,
@@ -235,6 +246,7 @@ const schemaJsonData = {
   createdAt: new Date('2018-12-12 12:12:12'),
   updatedAt: '2018-12-12',
   informations: {
+    id: 'b52879ec-8e3f-4ec2-8c8a-b35e0e1dd661',
     firstName: 'FirstName',
     lastName: 'LastNname',
   },
@@ -265,6 +277,7 @@ const schemaJsonDataReturn = {
   createdAt: new Date('2018-12-12 12:12:12'),
   updatedAt: '2018-12-12',
   informations: {
+    id: 'b52879ec-8e3f-4ec2-8c8a-b35e0e1dd661',
     firstName: 'FirstName',
     lastName: 'LastNname',
     phone: {
@@ -297,6 +310,7 @@ const schemaPrefilledJsonData = {
   createdAt: new Date('2018-12-12 12:12:12'),
   updatedAt: '2018-12-12',
   informations: {
+    id: 'b52879ec-8e3f-4ec2-8c8a-b35e0e1dd661',
     firstName: 'FirstName',
     lastName: 'LastNname',
   },
@@ -328,6 +342,7 @@ const schemaPrefilledDataReturn = {
   updatedAt: '2018-12-12',
   address: null,
   informations: {
+    id: 'b52879ec-8e3f-4ec2-8c8a-b35e0e1dd661',
     firstName: 'firstname',
     lastName: 'LastNname',
     phone: {},
@@ -359,6 +374,7 @@ const schemaPrefilledDataReturnOne = {
   createdAt: new Date('2018-12-12 12:12:12'),
   updatedAt: '2018-12-12',
   informations: {
+    id: 'b52879ec-8e3f-4ec2-8c8a-b35e0e1dd661',
     firstName: 'firstname',
     lastName: 'LastNname',
   },
@@ -389,6 +405,7 @@ const schemaFilterJsonDataReturn = {
   createdAt: new Date('2018-12-12 12:12:12'),
   updatedAt: '2018-12-12',
   informations: {
+    id: 'b52879ec-8e3f-4ec2-8c8a-b35e0e1dd661',
     firstName: 'firstname',
     lastName: 'LastNname',
   },
@@ -574,6 +591,40 @@ describe('Schema', () => {
         createdAt: ['createdAt has incorrect type'],
         roles: ['roles has incorrect type'],
         informations: ['informations has incorrect type'],
+      })
+    })
+
+    it('validator has to return uuid errors', async() => {
+      const SchemaData = new Schema(schemaJson)
+      let SchemaDataValidate = null
+      try {
+        SchemaDataValidate = await SchemaData.validate(Object.assign({}, schemaJsonData, {
+          id: 'tt',
+          email: 112,
+          active: 0,
+          createdAt: true,
+          informations: {
+            id: '123',
+            firstName: '123',
+            lastName: '123',
+          },
+          roles: '222',
+        }))
+      } catch (e) {
+        SchemaDataValidate = e
+      }
+
+      expect(SchemaDataValidate).to.eql({
+        id: ['id has incorrect type'],
+        email: ['email has incorrect type'],
+        active: ['active has incorrect type'],
+        createdAt: ['createdAt has incorrect type'],
+        roles: ['roles has incorrect type'],
+        informations: {
+          id: [
+            'id has incorrect uuid format',
+          ],
+        },
       })
     })
 
