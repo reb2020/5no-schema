@@ -129,7 +129,9 @@ export const initializeFunctions = (functionsData: Array<string | FiveNoSchema.F
       data: {
         ...functionArguments,
         options: functionOptions,
-        t: (value) => translate(value).replace(/\%value\%/g, functionArguments.value).replace(/\%name\%/g, functionArguments.name),
+        t: (value) => translate(translate(value)
+          .replace(/\%value\%/g, functionArguments.value)
+          .replace(/\%name\%/g, translate(functionArguments.name))),
       },
     })
   }
