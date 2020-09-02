@@ -27,7 +27,7 @@ const schemaJson = {
     }
 }
 
-const customFilertOrValidator = ({name, type, value, defaultValue, previousResult, allValues, options}) {
+const customFilertOrValidator = ({name, type, value, defaultValue, previousResult, allValues, options, t}) {
   //name - name of field
   //type - type of field
   //value - current value
@@ -35,6 +35,7 @@ const customFilertOrValidator = ({name, type, value, defaultValue, previousResul
   //previousResult - result previous validator
   //allValues - all data
   //options custom data
+  //t(message) - translater
 }
    
 ```
@@ -43,6 +44,11 @@ const customFilertOrValidator = ({name, type, value, defaultValue, previousResul
 
 ```js
 const Schema = require('@5no/schema')
+import { setLib } from '@5no/schema/translator'
+
+setLib({
+  'Test Custom Error': 'Translate Test Custom Error'
+})
 
 const schemaJson = {
     id: {
@@ -64,17 +70,17 @@ const schemaJson = {
                     }
                 ],
         validators: [
-                    ({value, previousResult}) => {
+                    ({value, previousResult, t}) => {
                         if (previousResult === true) {
                           if (value > 100) {
-                            return 'Test Custom Error'
+                            return t('Test Custom Error')
                           }
                           return true
                         }
                     },
                     async ({value}) => {
                         if (value > 100) {
-                            return 'async Test Custom Error'
+                            return new Error('async Test Custom Error')
                         }
                         return true
                     },
