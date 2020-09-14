@@ -173,7 +173,7 @@ export const isEqual = (a: any, b: any): boolean => {
 
   if ((a === null && b === null) || (typeOfValueA === 'undefined' && typeOfValueB === 'undefined')) {
     return true
-  } else if (typeOfValueA === typeOfValueB && typeOfValueA === 'object') {
+  } else if (typeOfValueA === typeOfValueB && typeOfValueA === 'object' && a !== null && b !== null) {
     const aProps = Object.getOwnPropertyNames(a)
     const bProps = Object.getOwnPropertyNames(b)
 

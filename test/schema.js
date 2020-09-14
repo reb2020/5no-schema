@@ -786,6 +786,25 @@ describe('Schema', () => {
       expect(SchemaDataFiltered).to.eql(schemaFilterJsonDataReturnOnePart)
     })
 
+    it('filter schema', async() => {
+      const SchemaData = new Schema(schemaJson)
+      let SchemaDataFiltered = null
+      try {
+        SchemaDataFiltered = await SchemaData.filter(Object.assign({}, schemaJsonData, {
+          id: 'tt',
+          email: 112,
+          active: 0,
+          createdAt: true,
+          informations: '1000',
+          roles: '222',
+        }))
+      } catch (e) {
+        SchemaDataFiltered = e
+      }
+
+      expect(SchemaDataFiltered.informations).to.eql({})
+    })
+
     it('custom filter', async() => {
       const SchemaData = new Schema(Object.assign({}, schemaJson, {
         id: {
