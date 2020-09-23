@@ -1,11 +1,17 @@
 const chai = require('chai')
+const i18n = require('@5no/i18n')
 
 const Schema = require('../index')
-const Translator = require('../translator')
 
-Translator.setLib({
-  '%name% has incorrect type': '%name% has incorrect type :)',
-})
+i18n.init([
+  {
+    language: 'en',
+    default: true,
+    db: {
+      '%name% has incorrect type': '%name% has incorrect type :)',
+    },
+  },
+])
 
 const expect = chai.expect
 

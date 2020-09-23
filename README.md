@@ -44,11 +44,17 @@ const customFilertOrValidator = ({name, type, value, defaultValue, previousResul
 
 ```js
 const Schema = require('@5no/schema')
-import { setLib } from '@5no/schema/translator'
+const i18n = require('@5no/i18n')
 
-setLib({
-  'Test Custom Error': 'Translate Test Custom Error'
-})
+i18n.init([
+  {
+    language: 'en',
+    default: true,
+    db: {
+      'Test Custom Error': 'Translate Test Custom Error'
+    },
+  }
+])
 
 const schemaJson = {
     id: {

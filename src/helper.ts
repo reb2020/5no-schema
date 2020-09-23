@@ -1,8 +1,7 @@
 import moment from 'moment'
+import { translate } from '@5no/i18n'
 
 import { FiveNoSchema } from '../typings/app'
-
-import { translate } from './translator'
 
 export const isDateValid = (date: string | Date, format: string = 'YYYY-MM-DD HH:mm:ss'): boolean => moment(date, format, true).isValid()
 
@@ -129,9 +128,10 @@ export const initializeFunctions = (functionsData: Array<string | FiveNoSchema.F
       data: {
         ...functionArguments,
         options: functionOptions,
-        t: (value) => translate(translate(value)
-          .replace(/\%value\%/g, functionArguments.value)
-          .replace(/\%name\%/g, translate(functionArguments.name))),
+        t: (value) => translate(translate(value, {
+          '%value%': functionArguments.value,
+          '%name%': translate(functionArguments.name),
+        })),
       },
     })
   }
