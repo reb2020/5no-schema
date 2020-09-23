@@ -1,6 +1,6 @@
 {
   "name": "@5no/schema",
-  "version": "1.3.9",
+  "version": "1.4.0",
   "description": "JSON Schema Filter/Validator",
   "main": "index.js",
   "types": "typings/index.d.ts",
@@ -52,7 +52,7 @@
     "url": "git+https://github.com/reb2020/5no-schema.git"
   },
   "dependencies": {
-    "@5no/i18n": "^1.0.3",
+    "@5no/i18n": "^1.0.5",
     "moment": "^2.27.0"
   },
   "devDependencies": {
