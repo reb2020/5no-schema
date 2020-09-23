@@ -35,7 +35,7 @@ const customFilertOrValidator = ({name, type, value, defaultValue, previousResul
   //previousResult - result previous validator
   //allValues - all data
   //options custom data
-  //t(message) - translater
+  //t(message) - translator
 }
    
 ```
