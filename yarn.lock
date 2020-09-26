@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@5no/i18n@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@5no/i18n/-/i18n-1.0.5.tgz#8f3920696a41a8a38a0d983c82db73d3eba8a773"
-  integrity sha512-DyaYDm3pYSVSU8sggfpsknwmbViLpdwvqhX9U9l1kyFXby96heeF6kFHPEqHLOrmKcsnKyF3ssqzc9DzIG9EBQ==
+"@5no/i18n@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@5no/i18n/-/i18n-1.0.6.tgz#129303c10a291daeb615006a0947a88bf8866294"
+  integrity sha512-Cx183GQJrNRuToyWjb5Zfv2bn1AE0GiIo88o5uYszS5Qk0jNAwP5XS5LGlfZEWf9qR7GT6IZme6fXK+oQDlX1g==
 
 "@babel/code-frame@^7.0.0":
   version "7.10.4"
