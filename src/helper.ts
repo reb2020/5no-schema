@@ -1,11 +1,11 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { translate } from '@5no/i18n'
 
 import { FiveNoSchema } from '../typings/app'
 
-export const isDateValid = (date: string | Date, format: string = 'YYYY-MM-DD HH:mm:ss'): boolean => moment(date, format, true).isValid()
+export const isDateValid = (date: string | Date, format: string = 'YYYY-MM-DD HH:mm:ss'): boolean => dayjs(date, format, true).isValid()
 
-export const formatDate = (date: string | Date, format: string = 'YYYY-MM-DD HH:mm:ss'): string => moment(date).format(format)
+export const formatDate = (date: string | Date, format: string = 'YYYY-MM-DD HH:mm:ss'): string => dayjs(date).format(format)
 
 export const formatNumber = (num: number | string, format: string = '0.00'): number => {
   const formatSplitted: Array<any> = format.split('.')
