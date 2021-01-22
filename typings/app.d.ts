@@ -1,6 +1,8 @@
 export namespace FiveNoSchema {
   type AllowTypes = 'string' | 'number' | 'boolean' | 'object' | 'array' | 'date';
 
+  type ObjectAllowTypes = String | Number | Boolean | Object | Array | Date;
+
   interface List<T> {
     [name: string]: T;
   }
@@ -18,21 +20,28 @@ export namespace FiveNoSchema {
     t: (value: string) => string;
   }
 
+  type Fn = (props: InitializeFnParams) => any;
+
+  interface FnInit {
+    fn: string | Fn;
+    options?: {
+      [name: string]: any;
+    };
+  }
+
   interface FieldsSchema {
     [name: string]: {
-      type: string | object;
+      type: AllowTypes | ObjectAllowTypes;
       defaultValue?: any;
       format?: string;
       prefilled?: boolean;
       required?: boolean;
       allowedValues?: Array<any>;
-      validators?: Array<any>;
-      filters?: Array<any>;
+      validators?: Array<Fn | FnInit | string>;
+      filters?: Array<Fn | FnInit | string>;
       schema?: FieldsSchema;
     }
   }
-
-  type Fn = (props: InitializeFnParams) => any;
 
   interface Validators {
     type: Fn;
@@ -57,13 +66,6 @@ export namespace FiveNoSchema {
   }
 
   type FunctionArguments = Omit<InitializeFnParams, 'options' | 't'>;
-
-  interface FnInit {
-    fn: string | Fn;
-    options?: {
-      [name: string]: any;
-    };
-  }
 
   interface InitializeFunctions {
     fn: Fn,

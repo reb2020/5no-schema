@@ -8,8 +8,8 @@ class Schema implements FiveNoSchema.Schema {
 
   private _schemas: FiveNoSchema.List<FiveNoSchema.Schema> = {}
   private _fields: FiveNoSchema.List<any> = {}
-  private _validators: FiveNoSchema.List<Array<string | FiveNoSchema.FnInit>> = {}
-  private _filters: FiveNoSchema.List<Array<string | FiveNoSchema.FnInit>> = {}
+  private _validators: FiveNoSchema.List<Array<string | FiveNoSchema.FnInit | FiveNoSchema.Fn>> = {}
+  private _filters: FiveNoSchema.List<Array<string | FiveNoSchema.FnInit | FiveNoSchema.Fn>> = {}
   private _allowedValues: FiveNoSchema.List<any> = {}
   private _formats: FiveNoSchema.List<string | undefined> = {}
   private _types: FiveNoSchema.List<FiveNoSchema.AllowTypes> = {}

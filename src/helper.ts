@@ -104,7 +104,7 @@ export const initializePromise = (field: string, objectData: FiveNoSchema.Initia
   })
 })
 
-export const initializeFunctions = (functionsData: Array<string | FiveNoSchema.FnInit>, functionsList: FiveNoSchema.Validators | FiveNoSchema.Filters, functionArguments: FiveNoSchema.FunctionArguments): Array<FiveNoSchema.InitializeFunctions> => {
+export const initializeFunctions = (functionsData: Array<string | FiveNoSchema.FnInit | FiveNoSchema.Fn>, functionsList: FiveNoSchema.Validators | FiveNoSchema.Filters, functionArguments: FiveNoSchema.FunctionArguments): Array<FiveNoSchema.InitializeFunctions> => {
   const initializeFunctionsData = [] as Array<FiveNoSchema.InitializeFunctions>
   for (const functionData of functionsData) {
     let functionObject: any = functionData
