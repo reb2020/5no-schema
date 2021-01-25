@@ -97,6 +97,8 @@ class Schema implements FiveNoSchema.Schema {
     })
   }
 
+  getFields = (): FiveNoSchema.List<any> => this._fields
+
   filter = async(data: object): Promise<object> => {
     let dataFilter = filterDataByFields(clone(data), this._fields, this._prefilled)
     if (this._prefilledSchema) {
