@@ -1,6 +1,6 @@
 {
   "name": "@5no/schema",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "JSON Schema Filter/Validator",
   "main": "index.js",
   "types": "typings/index.d.ts",

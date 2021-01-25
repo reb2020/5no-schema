@@ -29,18 +29,22 @@ export namespace FiveNoSchema {
     };
   }
 
+  interface FieldSchema {
+    type: AllowTypes | ObjectAllowTypes;
+    defaultValue?: any;
+    format?: string;
+    prefilled?: boolean;
+    required?: boolean;
+    allowedValues?: Array<any>;
+    validators?: Array<Fn | FnInit | string>;
+    filters?: Array<Fn | FnInit | string>;
+    schema?: {
+      [name: string]: FieldSchema;
+    };
+  }
+
   interface FieldsSchema {
-    [name: string]: {
-      type: AllowTypes | ObjectAllowTypes;
-      defaultValue?: any;
-      format?: string;
-      prefilled?: boolean;
-      required?: boolean;
-      allowedValues?: Array<any>;
-      validators?: Array<Fn | FnInit | string>;
-      filters?: Array<Fn | FnInit | string>;
-      schema?: FieldsSchema;
-    }
+    [name: string]: FieldSchema;
   }
 
   interface Validators {
